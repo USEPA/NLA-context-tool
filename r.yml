@@ -1,0 +1,20 @@
+packages: 
+    - cran_mirror: https://cloud.r-project.org/
+      num_threads: 2 
+      packages: 
+      - name: shiny 
+      - name: dplyr 
+      - name: ggplot2
+      - name: shinyjs
+      - name: htmltools
+      - name: stringr
+      - name: stringi
+      - name: readr
+      - name: glue
+      - name: scales
+      - name: patchwork
+      - name: ggpubr
+      - name: grid
+      - name: gridExtra
+      - name: shinyWidgets
+      - name: lattice

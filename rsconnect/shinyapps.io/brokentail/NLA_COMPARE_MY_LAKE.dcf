@@ -1,0 +1,12 @@
+name: NLA_COMPARE_MY_LAKE
+title: NLA_COMPARE_MY_LAKE
+username:
+account: brokentail
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 878803
+bundleId: 2025261
+url: https://brokentail.shinyapps.io/NLA_COMPARE_MY_LAKE/
+when: 1555768602.91118
+asMultiple: FALSE
+asStatic: FALSE

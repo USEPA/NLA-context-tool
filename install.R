@@ -1,0 +1,17 @@
+# To use this Shinyapp the following packages need to be installed. You can install the by sourcing
+# this file.
+install.packages("shiny")
+install.packages("ggplot2")
+install.packages("shinyjs")
+install.packages("htmltools")
+install.packages("stringr")
+install.packages("stringi")
+install.packages("readr")
+install.packages("dplyr")
+install.packages("glue")
+install.packages("scales")
+install.packages("patchwork")
+install.packages("ggpubr")
+install.packages("gridExtra")
+install.packages("shinyWidgets")
+install.packages("lattice")

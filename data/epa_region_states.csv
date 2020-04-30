@@ -1,0 +1,52 @@
+state_name,epa_region,region_name
+Connecticut,Region_1,Region 1
+Maine,Region_1,Region 1
+Massachusetts,Region_1,Region 1
+New Hampshire,Region_1,Region 1
+Rhode Island,Region_1,Region 1
+Vermont,Region_1,Region 1
+Idaho,Region_10,Region 10
+Oregon,Region_10,Region 10
+Washington,Region_10,Region 10
+Alaska,Region_10,Region 10
+New Jersey,Region_2,Region 2
+New York,Region_2,Region 2
+Puerto Rico,Region_2,Region 2
+Delaware,Region_3,Region 3
+Maryland,Region_3,Region 3
+Pennsylvania,Region_3,Region 3
+Virginia,Region_3,Region 3
+West Virginia,Region_3,Region 3
+Alabama,Region_4,Region 4
+Florida,Region_4,Region 4
+Georgia,Region_4,Region 4
+Kentucky,Region_4,Region 4
+Mississippi,Region_4,Region 4
+North Carolina,Region_4,Region 4
+South Carolina,Region_4,Region 4
+Tennessee,Region_4,Region 4
+Illinois,Region_5,Region 5
+Indiana,Region_5,Region 5
+Michigan,Region_5,Region 5
+Minnesota,Region_5,Region 5
+Ohio,Region_5,Region 5
+Wisconsin,Region_5,Region 5
+Arkansas,Region_6,Region 6
+Louisiana,Region_6,Region 6
+New Mexico,Region_6,Region 6
+Oklahoma,Region_6,Region 6
+Texas,Region_6,Region 6
+Iowa,Region_7,Region 7
+Kansas,Region_7,Region 7
+Missouri,Region_7,Region 7
+Nebraska,Region_7,Region 7
+Colorado,Region_8,Region 8
+Montana,Region_8,Region 8
+North Dakota,Region_8,Region 8
+South Dakota,Region_8,Region 8
+Utah,Region_8,Region 8
+Wyoming,Region_8,Region 8
+Arizona,Region_9,Region 9
+California,Region_9,Region 9
+Nevada,Region_9,Region 9
+Hawaii,Region_9,Region 9

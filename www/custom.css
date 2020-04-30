@@ -1,0 +1,146 @@
+body {
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif; 
+  font-size: 18px;
+}
+
+#help_button_state {
+  float: right;
+}
+
+#dropdown-menu-help_button {
+  left: -250px;
+}
+.selectize-input {
+  height: 30px;
+  min-height: 25px;
+  font-size: 12px;
+}
+.main_header {
+    background-color: #0097DC;
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.plot_header {
+    background-color: #005DA9;
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+    font-size: 14pt;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.well {
+  background-color: #e7e7e8;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 625px;
+  margin-top: 20px;
+}
+
+.region_title {
+  font-size: 18px;
+}
+#region_map_img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebar_header {
+  font-size: 24px;
+  border-bottom: darkgray solid thin;
+  margin-bottom: 6px;
+}
+
+#map_title {
+  text-align: center;
+  color: black;
+  padding-top: 20px;
+  margin-top: 7px;
+}
+
+.user_data {
+  color: #005DA9;
+  font-weight: 600;
+}
+
+#disclaimer_text {
+    font-size: 15px;
+}
+
+#overview_text {
+  margin-bottom: 15px;
+  font-size: 16px;
+
+}
+.sidebar_header {
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.instructions {
+  font-size: 16px;
+  padding-bottom: 10px;
+}
+
+.form-control {
+  height: 25px;
+}
+
+.selectize-control {
+  margin-bottom: 0px;
+}
+
+.form-group {
+  margin-bottom: 0px;
+}
+
+.input_header {
+  color: #0097DC;
+  margin-bottom: 0;
+  font-size: 16px;
+  padding-top: 4px;
+}
+
+.value_header_fix {
+  margin-top: 8px;
+}
+
+#default_header {
+  font-size: 24px;
+  font-weight: 600;
+}
+#default_container {
+  display: table;
+  height: 579px;
+  overflow: hidden;
+  border: 1px solid darkgray;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 14px;
+  font-size: 16px;
+  color: #005da4;
+  min-height: 592px;
+}
+
+#default_container > div {
+  margin-bottom: 10px;
+}
+
+#default_text {
+  display: table-cell; 
+  vertical-align: top;
+  padding: 50px;
+  padding-top: 95px;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
