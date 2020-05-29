@@ -1,5 +1,5 @@
 packages: 
-    - cran_mirror: https://cloud.r-project.org/
+    - cran_mirror: https://raw.githubusercontent.com/USEPA/cflinuxfs3-CRAN/dev/cflinuxfs3/
       num_threads: 2 
       packages: 
       - name: shiny 
@@ -13,8 +13,23 @@ packages:
       - name: glue
       - name: scales
       - name: patchwork
-      - name: ggpubr
-      - name: grid
       - name: gridExtra
+      - name: cowplot
+      - name: tidyselect
+      - name: ggrepel
+      - name: ggsci
+      - name: tidyr
+      - name: purrr
+      - name: ggsignif
+      - name: polynom
+      - name: rlang
+      - name: carData
+      - name: car
+      - name: corrplot
+      - name: broom
+      - name: rstatix
+      - name: tibble
+      - name: magrittr
+      - name: ggpubr
       - name: shinyWidgets
       - name: lattice
