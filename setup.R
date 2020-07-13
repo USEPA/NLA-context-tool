@@ -56,7 +56,7 @@ disclaimer_text <- "Population estimates presented above are based on a weighted
 intro_text <- function() {
   
   tagList(
-    div("This tool was produced by National Aquatic Resource Surveys (NARS) program of the U.S. Environmental Protection Agency (EPA). The NARS program conducts large-scale studies of the quality of the nation’s waters. One such study is the National Lakes Assessment (NLA).", style = "font-size:110%;"),
+    div("This tool was produced by the National Aquatic Resource Surveys (NARS) program of the U.S. Environmental Protection Agency (EPA). The NARS program conducts large-scale studies of the quality of the nation’s waters. One such study is the National Lakes Assessment (NLA).", style = "font-size:110%;"),
   
     div(tags$strong("What Can the Tool Do?"),"This tool allows you to input water quality data for a lake you care about, then see it compared to statistically representative data collected by the NLA.  You’ll view comparisons to the national, regional and state level. This is currently possible using 2012 NLA data for any of four important and common indicators of water quality:",
         tags$ul(tags$li(tags$i("Secchi Depth")," (a measure of water clarity)"),
@@ -66,7 +66,7 @@ intro_text <- function() {
   
     div(tags$strong("How Do I Get Started?")," Please read the instructions on the left then enter data.  Output will appear once you have entered data into all required fields (marked with an *). Entering the lake name is optional."),
 
-    div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, hover over the “?” icon on the left."),
+    div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, click the “?” icon on the left."),
   
     div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Safari using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens"),
   
@@ -126,7 +126,7 @@ indicators <- read_csv("data/combined_indicators.csv")
 
 indicator_names <- 
   tibble(indi_abbr = c("SECCHI","NTL","PTL","CHL"),
-         names = c("Secchi Depth","Total Nitrogren","Total Phosphorus","Chlorophyll-a"))
+         names = c("Secchi Depth","Total Nitrogen","Total Phosphorus","Chlorophyll-a"))
 
 bp_stats <- c("5Pct","25Pct","50Pct","75Pct","95Pct")
 

@@ -334,15 +334,15 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   
   header_title +
     filler +
-    ggparagraph(glue(top_text), family = "Arial", size = 19.5) +
+    ggparagraph(glue(top_text), family = "Arial", size = 18.5) +
     filler +
     local_title + filler + local + 
     regional_title + filler + regional +
     national_title + filler  + national +
     filler +
-    ggparagraph(glue(bottom_text), family = "Arial", size = 12) +
-    ggparagraph(glue(values_text), family = "Arial", size = 12) +
-    ggparagraph(glue(url_text), family = "Arial", size = 12) +
+    ggparagraph(glue(bottom_text), family = "Arial", size = 11) +
+    ggparagraph(glue(values_text), family = "Arial", size = 11) +
+    ggparagraph(glue(url_text), family = "Arial", size = 11) +
     plot_layout(ncol = 1, heights = c(header_height,
                                       .21,
                                       top_paragraph,.2,
