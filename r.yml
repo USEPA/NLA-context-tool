@@ -1,35 +1,19 @@
-packages: 
-    - cran_mirror: https://raw.githubusercontent.com/USEPA/cflinuxfs3-CRAN/dev/cflinuxfs3/
-      num_threads: 2 
-      packages: 
-      - name: shiny 
-      - name: dplyr 
-      - name: ggplot2
-      - name: shinyjs
-      - name: htmltools
-      - name: stringr
-      - name: stringi
-      - name: readr
-      - name: glue
-      - name: scales
-      - name: patchwork
-      - name: gridExtra
-      - name: cowplot
-      - name: tidyselect
-      - name: ggrepel
-      - name: ggsci
-      - name: tidyr
-      - name: purrr
-      - name: ggsignif
-      - name: polynom
-      - name: rlang
-      - name: carData
-      - name: car
-      - name: corrplot
-      - name: broom
-      - name: rstatix
-      - name: tibble
-      - name: magrittr
-      - name: ggpubr
-      - name: shinyWidgets
-      - name: lattice
+---
+packages:
+- cran_mirror: https://raw.githubusercontent.com/USEPA/cflinuxfs3-CRAN/dev/cflinuxfs3/
+  num_threads: 2
+  packages:
+    - name: shinyjs
+    - name: dplyr
+    - name: ggplot2
+    - name: htmltools
+    - name: stringr
+    - name: stringi
+    - name: readr
+    - name: glue
+    - name: scales
+    - name: patchwork
+    - name: ggpubr
+    - name: gridExtra
+    - name: shinyWidgets
+    - name: lattice
