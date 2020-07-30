@@ -85,7 +85,7 @@ intro_text <- function() {
 
 # Indicator abbr -> Measurement
 measurements <- list("PTL" = "μg/L",
-                     "NTL" = "mg/L",
+                     "NTL" = "μg/L",
                      "SECCHI" = "meters",
                      "CHL" = "μg/L")
 

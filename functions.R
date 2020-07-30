@@ -259,6 +259,21 @@ invalid_image_file <- function() {
     plot_layout(ncol = 1, heights = c(.1,.1,.1,1))
 }
 
+# Formats capitalization of the measurement unit
+# Arguments
+# measurement_unit: What type of measurement to put on the x-axis
+format_measure_unit <- function(measure_unit) {
+  
+  if (measure_unit == "μg/L") {
+    return("μg/L")
+  }
+  else {
+    return("METERS")
+  }
+  
+
+}
+
 # Generates a PNG for the user to download
 # Arguments
 # df: the indicator data frame
@@ -298,7 +313,7 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   
   bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s 2012 U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from June to September 2012. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
   
-  values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. A logarithmic scale is used to accommodate extreme values. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {toupper(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
+  values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. A logarithmic scale is used to accommodate extreme values. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
 
   url_text <- "Image exported from {session_url} on {date()}"
   
