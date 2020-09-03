@@ -1,0 +1,8 @@
+applications:
+- name: nla-lake-context-tool-prod
+  memory: 256M
+  routes:
+    - route: nla-lake-context-tool-prod.app.cloud.gov
+  disk_quota: 1G
+  buildpacks:
+     - r_buildpack
