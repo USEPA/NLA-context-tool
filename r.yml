@@ -1,7 +1,6 @@
 ---
 packages:
-- cran_mirror: https://raw.githubusercontent.com/USEPA/cflinuxfs3-CRAN/dev/cflinuxfs3/
-  num_threads: 2
+- cran_mirror: https://raw.githubusercontent.com/USEPA/cflinuxfs3-CRAN/R-4.0.2/cflinuxfs3/
   packages:
     - name: shinyjs
     - name: dplyr
@@ -17,3 +16,20 @@ packages:
     - name: gridExtra
     - name: shinyWidgets
     - name: lattice
+    - name: carData
+    - name: car
+    - name: rio
+    - name: rstatix
+    - name: cowplot
+    - name: tidyselect
+    - name: ggrepel
+    - name: ggsci
+    - name: tidyr
+    - name: purrr
+    - name: ggsignif
+    - name: polynom
+    - name: rlang
+    - name: corrplot
+    - name: broom
+    - name: tibble
+    - name: magrittr
