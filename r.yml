@@ -1,16 +1,13 @@
 ---
 packages:
-- cran_mirror: https://raw.githubusercontent.com/USEPA/cflinuxfs3-CRAN/R-4.0.2/cflinuxfs3/
-  packages:
+- packages:
     - name: shinyjs
     - name: dplyr
-    - name: ggplot2
     - name: htmltools
     - name: stringr
     - name: stringi
     - name: readr
     - name: glue
-    - name: scales
     - name: patchwork
     - name: ggpubr
     - name: gridExtra
@@ -32,4 +29,4 @@ packages:
     - name: corrplot
     - name: broom
     - name: tibble
-    - name: magrittr
+    - name: vctrs
