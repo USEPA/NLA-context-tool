@@ -122,7 +122,7 @@ state_abbrs <-
 
 ## Indcators
 
-indicators <- read_csv("data/combined_indicators.csv")
+indicators <- read_csv("data/combined_indicators_2017.csv")
 
 indicator_names <- 
   tibble(indi_abbr = c("SECCHI","NTL","PTL","CHL"),
@@ -141,5 +141,5 @@ scale_max <- list("PTL" = 4100,
                   'NTL' = 12001)
 
 ## Estimates 
-estimates <- read_csv("data/combined_estimates.csv")
+estimates <- read_csv("data/combined_estimates_2017.csv")
 

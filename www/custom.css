@@ -144,3 +144,17 @@ input[type=number]::-webkit-outer-spin-button {
     appearance: none;
     margin: 0; 
 }
+
+#flex-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+#year_selector_wrapper {
+  width: 42%;
+}
+
+.selectize-input {
+  height: 25px;
+  line-height: 15px;
+}

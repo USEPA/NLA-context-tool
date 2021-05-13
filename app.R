@@ -34,10 +34,22 @@ ui <- fixedPage(
           numericInput("indicator_value",
                        NULL,
                        NA),
-          div(tags$strong("Year Data Collected*",class = "input_header"),class = "value_header_fix"),
-          numericInput("year_input",
-                       NULL,
-                       NA),
+          div(
+            id="flex-row",
+            div(
+              div(tags$strong("Year Data Collected*",class = "input_header"),class = "value_header_fix"),
+              numericInput("year_input",
+                           NULL,
+                           NA)
+            ),
+            div(id="year_selector_wrapper",
+              div(tags$strong("NLA Year",class = "input_header"),class = "value_header_fix"),
+              selectInput("year_selector",
+                          NULL,
+                          width="100%",
+                          choices =  c("NLA 2012", "NLA 2017"))
+            )
+          ),
           div(tags$strong("Lake Name",class = "input_header"),class = "value_header_fix"),
           textInput("lake_name_input",
                     NULL),
