@@ -36,7 +36,7 @@ ui <- fixedPage(
                        NA),
           div(
             id="flex-row",
-            div(
+            div(id="year_collected_wrapper",
               div(tags$strong("Year Data Collected*",class = "input_header"),class = "value_header_fix"),
               numericInput("year_input",
                            NULL,
@@ -47,7 +47,7 @@ ui <- fixedPage(
               selectInput("year_selector",
                           NULL,
                           width="100%",
-                          choices =  c("NLA 2012", "NLA 2017"))
+                          choices =  c(2012, 2017))
             )
           ),
           div(tags$strong("Lake Name",class = "input_header"),class = "value_header_fix"),
@@ -166,6 +166,7 @@ server <- function(input, output,session) {
     indi_text <- indicator_text[input$indicator_selector]
     lake_name <- lake_name()
     year <- input$year_input
+    nla_year <- input$year_selector
     
     if (is.null(input_value_d())) {
       value <- 0.85
@@ -183,7 +184,7 @@ server <- function(input, output,session) {
     state_abbr <- state_abbrs[input$state_input][[1]]
     lake_value <- input_value_d()
     margin_of_error <- 
-      margin_calculator(estimates,state_abbr,input$indicator_selector,lake_value) %>%
+      margin_calculator(dplyr::filter(estimates, year == input$year_selector),state_abbr,input$indicator_selector,lake_value) %>%
       round()
     
     state_name <- input$state_input
@@ -191,6 +192,8 @@ server <- function(input, output,session) {
       indicator_names %>% 
       filter(indi_abbr == input$indicator_selector) %>% 
       pull(names)
+    
+    nla_year <- input$year_selector
     
     tags$div(class = "disclaimer",
              tags$sup("†"),
@@ -205,8 +208,9 @@ server <- function(input, output,session) {
     value <- input_value_d()
     indicator <- input$indicator_selector
     state_abbr <- state_abbrs[input$state_input][[1]]
+    nla_year <- input$year_selector
     
-    text <- generate_header(state_abbr,indicator,value,lake_name(),state_abbr)
+    text <- generate_header(state_abbr,indicator,value,lake_name(),state_abbr, nla_year)
     
     tags$div(class = "plot_header",
              HTML(glue("{text}<sup>†</sup>")))
@@ -227,8 +231,9 @@ server <- function(input, output,session) {
     
     value <- input_value_d()
     indicator <- input$indicator_selector
+    nla_year <- input$year_selector
     
-    text <- generate_header(epa_region,indicator,value,lake_name(),area_name)
+    text <- generate_header(epa_region,indicator,value,lake_name(),area_name, nla_year)
     
     tags$div(class = "plot_header",
              HTML(glue("{text}<sup>†</sup>")))
@@ -239,8 +244,9 @@ server <- function(input, output,session) {
     
     value <- input_value_d()
     indicator <- input$indicator_selector
+    nla_year <- input$year_selector
     
-    text <- generate_header("All_Sites",indicator,value,lake_name(),"Nationally")
+    text <- generate_header("All_Sites",indicator,value,lake_name(),"Nationally", nla_year)
     
     tags$div(class = "plot_header",
              HTML(glue("{text}<sup>†</sup>")))
@@ -291,6 +297,7 @@ server <- function(input, output,session) {
     measure_unit <- measurements[input$indicator_selector][[1]]
     state_abbr <- state_abbrs[input$state_input][[1]]
     indicators %>% 
+      dplyr::filter(year == input$year_selector) %>%
       indicator_plot(state_abbr,
                      input$indicator_selector,
                      measure_unit,
@@ -316,6 +323,7 @@ server <- function(input, output,session) {
     measure_unit <- measurements[input$indicator_selector][[1]]
     
     indicators %>% 
+      dplyr::filter(year == input$year_selector) %>%
       indicator_plot(region_name,
                      input$indicator_selector,
                      measure_unit,
@@ -329,6 +337,7 @@ server <- function(input, output,session) {
     measure_unit <- measurements[input$indicator_selector][[1]]
     
     indicators %>% 
+      dplyr::filter(year == input$year_selector) %>%
       indicator_plot("All_Sites",
                      input$indicator_selector,
                      measure_unit,
@@ -356,7 +365,7 @@ server <- function(input, output,session) {
         lake_value <- input_value_d()
         
         session_url <- paste0(session$clientData$url_protocol,"//",session$clientData$url_hostname,session$clientData$url_pathname)
-        ggsave(file,png_creator(indicators,
+        ggsave(file,png_creator(dplyr::filter(indicators, year == input$year_selector),
                                 sub_pop = state_abbrs[input$state_input][[1]],
                                 indi = input$indicator_selector,
                                 measure_unit = measurements[input$indicator_selector],
@@ -366,7 +375,9 @@ server <- function(input, output,session) {
                                 indi_text = indicator_text[input$indicator_selector],
                                 name = input$state_input,
                                 session_url = session_url,
-                                margin_of_error = round(margin_calculator(estimates,state_abbr,input$indicator_selector,lake_value))),
+                                margin_of_error = round(margin_calculator(dplyr::filter(estimates, year == input$year_selector),state_abbr,input$indicator_selector,lake_value)),
+                                nla_year = input$year_selector
+                                ),
                width = 10.4,height = 9.69) }
       else {
         ggsave(file,invalid_image_file())

@@ -47,10 +47,10 @@ lake_name_limit <- 17
 title_text <- "How Does {title_lake_name} Compare to Other U.S. Lakes?"
 
 # First Sentence text
-header_text <- "You reported that {lake_name} in {state_name} ({state_abbrs[[state_name]]}) had an observed value of <span class='user_data'>{comma_format(accuracy = 0.1)(round2(value,1))} {indi_measure} </span> for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in 2012. {indi_text}" 
+header_text <- "You reported that {lake_name} in {state_name} ({state_abbrs[[state_name]]}) had an observed value of <span class='user_data'>{comma_format(accuracy = 0.1)(round2(value,1))} {indi_measure} </span> for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in <span class='user_data'>{nla_year}</span>. {indi_text}" 
 
 # Bottom Disclaimer Text
-disclaimer_text <- "Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s 2012 U.S. National Lakes Assessment (NLA). {indi_text} was measured once at an open water location from June to September 2012. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {state_name}: ±{margin_of_error}. To learn about the NLA, please visit the "
+disclaimer_text <- "Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_text} was measured once at an open water location from June to September {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {state_name}: ±{margin_of_error}. To learn about the NLA, please visit the "
 
 # Default landing page text
 intro_text <- function() {
@@ -58,7 +58,7 @@ intro_text <- function() {
   tagList(
     div("This tool was produced by the National Aquatic Resource Surveys (NARS) program of the U.S. Environmental Protection Agency (EPA). The NARS program conducts large-scale studies of the quality of the nation’s waters. One such study is the National Lakes Assessment (NLA).", style = "font-size:110%;"),
   
-    div(tags$strong("What Can the Tool Do?"),"This tool allows you to input water quality data for a lake you care about, then see it compared to statistically representative data collected by the NLA.  You’ll view comparisons to the national, regional and state level. This is currently possible using 2012 NLA data for any of four important and common indicators of water quality:",
+    div(tags$strong("What Can the Tool Do?"),"This tool allows you to input water quality data for a lake you care about, then see it compared to statistically representative data collected by the NLA.  You’ll view comparisons to the national, regional and state level. This is currently possible using 2012 and 2017 NLA data for any of four important and common indicators of water quality:",
         tags$ul(tags$li(tags$i("Secchi Depth")," (a measure of water clarity)"),
                 tags$li(tags$i("Total Phosphorus")," (a nutrient that can trigger problematic algal blooms)"),
                 tags$li(tags$i("Total Nitrogen"), " (another such nutrient)"),
@@ -121,8 +121,11 @@ state_abbrs <-
            region_lookup_table$state_name)
 
 ## Indcators
+indicators_2012 <- read_csv("data/combined_indicators_2012.csv") %>% tibble::add_column(year = 2012)
+indicators_2017 <- read_csv("data/combined_indicators_2017.csv") %>% tibble::add_column(year = 2017)
+indicators <- dplyr::bind_rows(indicators_2012, indicators_2017)
 
-indicators <- read_csv("data/combined_indicators_2017.csv")
+#indicators <- indicators_2012
 
 indicator_names <- 
   tibble(indi_abbr = c("SECCHI","NTL","PTL","CHL"),
@@ -141,5 +144,9 @@ scale_max <- list("PTL" = 4100,
                   'NTL' = 12001)
 
 ## Estimates 
-estimates <- read_csv("data/combined_estimates_2017.csv")
+estimates_2012 <- read_csv("data/combined_estimates_2012.csv") %>% tibble::add_column(year = 2012)
+estimates_2017 <- read_csv("data/combined_estimates_2017.csv") %>% tibble::add_column(year = 2017)
+estimates <- dplyr::bind_rows(estimates_2012, estimates_2017)
+
+# estimates <- estimates_2012
 

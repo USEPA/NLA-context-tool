@@ -42,7 +42,7 @@ indicator_plot <- function(df,
   # between the compared value and the maximum value for the
   # indicator in the data set.
   max_scale <- max(scale_max[indi][[1]],compared_value)
-  
+
   # Generates the box plot for displaying in the site
   
   df %>% 
@@ -207,16 +207,17 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
 # area_name: The EPA region
 #
 # returns: A text string of the header
-generate_header <- function(sub_pop,indicator,value,lake_name,area_name) {
-  max_indi_val <- indicator_max(estimates,sub_pop,indicator)
-  min_indi_val <- indicator_min(estimates,sub_pop,indicator)
+generate_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year) {
+  
+  max_indi_val <- indicator_max(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
+  min_indi_val <- indicator_min(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
   
   if (value > max_indi_val) {
     pct_value <- "'s value is above the highest NLA result."
   } else if (value < min_indi_val) {
     pct_value <- "'s value is at or below the lowest NLA result."
   } else {
-    pct_num <- ordinal_format()(percentile_value(estimates,sub_pop,indicator,value))
+    pct_num <- ordinal_format()(percentile_value(dplyr::filter(estimates, year == nla_year),sub_pop,indicator,value))
     pct_value <- glue(" is in the {pct_num} percentile.")
   }
   
@@ -288,7 +289,7 @@ format_measure_unit <- function(measure_unit) {
 # margin_of_error: The margin of error
 png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name = "your lake", 
                          year = 2018, indi_text = "NA", name = "Alabama",
-                         session_url = "", margin_of_error) {
+                         session_url = "", margin_of_error, nla_year = 2012) {
   
   # Looks up the english version of the indicator name
   indi_english <- indicator_english[indi]
@@ -309,9 +310,9 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   }
   
   # The summary paragraph at the top of the image
-  top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in 2012. {indi_text}"
+  top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in {nla_year}. {indi_text}"
   
-  bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s 2012 U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from June to September 2012. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
+  bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from June to September {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
   
   values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. A logarithmic scale is used to accommodate extreme values. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
 
@@ -335,12 +336,12 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
 
   # Generate Title Sections
   header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
-  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr),"†"),"white","#005DA9",1.75 * length_ratio)
-  local <- indicator_plot(indicators,sub_pop,indi,measure_unit,compared_value)
-  regional <- indicator_plot(indicators,epa_region,indi,measure_unit,compared_value)
-  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name),"†"),"white","#005DA9",1.75 * length_ratio)
-  national <- indicator_plot(indicators,"All_Sites",indi,measure_unit,compared_value)
-  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally"),"†"),"white","#005DA9",1.75 * length_ratio)
+  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"†"),"white","#005DA9",1.75 * length_ratio)
+  local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value)
+  regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value)
+  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"†"),"white","#005DA9",1.75 * length_ratio)
+  national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value)
+  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"†"),"white","#005DA9",1.75 * length_ratio)
   
   # Plot sizing config.
   plot_height <- .95
