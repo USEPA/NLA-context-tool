@@ -161,6 +161,16 @@ indicator_min <- function(df,sub_pop,indi) {
     min()
 }
 
+# Return plain text description of the time frame (e.g., 'June to September')
+get_survey_timeframe <- function(nla_year) {
+  if (nla_year == "2017" || nla_year == 2017) {
+    return('May to October')
+  }
+  else {
+    return('June to September')
+  }
+}
+
 # Calculates the margin of error for an indicator compared to
 # a comparison value
 # Arguments:
@@ -289,7 +299,7 @@ format_measure_unit <- function(measure_unit) {
 # margin_of_error: The margin of error
 png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name = "your lake", 
                          year = 2018, indi_text = "NA", name = "Alabama",
-                         session_url = "", margin_of_error, nla_year = 2012) {
+                         session_url = "", margin_of_error, nla_year = 2012, survey_timeframe = 'June to September') {
   
   # Looks up the english version of the indicator name
   indi_english <- indicator_english[indi]
@@ -312,7 +322,7 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   # The summary paragraph at the top of the image
   top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in {nla_year}. {indi_text}"
   
-  bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from June to September {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
+  bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
   
   values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. A logarithmic scale is used to accommodate extreme values. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
 

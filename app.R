@@ -7,14 +7,14 @@ ui <- fixedPage(
   # This is required for the bit of javascript used on line 79
   tags$head(
     useShinyjs(),
-    tags$link(rel = "stylesheet", type = "text/css", href = "/custom.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   ),
   
   sidebarLayout(
     # Side bar layout lives here
     sidebarPanel(
       tags$div("Instructions",class = "sidebar_header",
-               dropdownButton(tags$img(src = "/help_tooltip.png",align = "right",
+               dropdownButton(tags$img(src = "help_tooltip.png",align = "right",
                                        height = 650,
                                        width = 1033),
                               size = "xs",
@@ -142,7 +142,7 @@ server <- function(input, output,session) {
       tags$h3(class = "main_header",
               style = "background-color:#005da4;text-align:left;padding-left:10px;",
               glue(title_text),
-              tags$img(src = "/epa_logo.png",
+              tags$img(src = "epa_logo.png",
                        align = "right",
                        width = 73,
                        height = 24,
@@ -194,6 +194,7 @@ server <- function(input, output,session) {
       pull(names)
     
     nla_year <- input$year_selector
+    survey_timeframe <- get_survey_timeframe(nla_year)
     
     tags$div(class = "disclaimer",
              tags$sup("†"),
@@ -376,7 +377,8 @@ server <- function(input, output,session) {
                                 name = input$state_input,
                                 session_url = session_url,
                                 margin_of_error = round(margin_calculator(dplyr::filter(estimates, year == input$year_selector),state_abbr,input$indicator_selector,lake_value)),
-                                nla_year = input$year_selector
+                                nla_year = input$year_selector,
+                                survey_timeframe = get_survey_timeframe(input$year_selector)
                                 ),
                width = 10.4,height = 9.69) }
       else {
