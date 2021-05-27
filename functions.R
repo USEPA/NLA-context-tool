@@ -22,6 +22,24 @@ round2 = function(x, n=1) {
   z*posneg
 }
 
+getStat <- function(df, stat, max_scale) {
+  stat_val <- df %>%
+    filter(statistic == stat) %>%
+    pull(estimate) %>% 
+    max()
+  
+  # if (stat_val > max_scale) {
+  #   stat_val <- max_scale
+  # }
+  
+  # if (stat_val < 0.01) {
+  #   stat_val <- 0.01
+  # }
+  
+  
+  return(stat_val)
+}
+
 # Indicator Plot Function
 # This function takes the following arguments:
 # df: The indicators data frame
@@ -41,50 +59,73 @@ indicator_plot <- function(df,
   # Set the maximum value for the scale as the greatest 
   # between the compared value and the maximum value for the
   # indicator in the data set.
-  max_scale <- max(scale_max[indi][[1]],compared_value)
+  max_scale <- compared_value #max(scale_max[indi][[1]],compared_value)
 
   # Generates the box plot for displaying in the site
   
-  df %>% 
+  df <- df %>% 
     filter(subpopulation == sub_pop,
            indicator == indi,
-           statistic %in% bp_stats) %>% 
-    ggplot(aes(y = estimate)) +
-    geom_boxplot(coef = 5,
-                 width = .2,
+           statistic %in% bp_stats)
+  
+  formatted_df <- data.frame(
+    x = 0,
+    y5 = getStat(df, "5Pct", max_scale),
+    y25 = getStat(df, "25Pct", max_scale),
+    y50 = getStat(df, "50Pct", max_scale),
+    y75 = getStat(df, "75Pct", max_scale),
+    y95 = getStat(df, "95Pct", max_scale)
+  )
+
+  formatted_df %>%
+    ggplot(aes(x)) +
+    geom_boxplot(width = .2,
                  outlier.shape = NA,
-                 color = "darkgray") +
-    # Comment out the line the below to hide the whiskers
-    stat_boxplot(geom = 'errorbar',
-                 coef = 6, # you can adjust this to adjust the whisker size
-                 width = 0.085,
-                 color = "darkgray") +
+                 color = "darkgray",
+                 mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
+                 stat = "identity") +
+    # # Comment out the line the below to hide the whiskers
+    # stat_boxplot(geom = 'errorbar',
+    #              coef = 6, # you can adjust this to adjust the whisker size
+    #              width = 0.085,
+    #              color = "darkgray") +
+    geom_segment(
+      colour = "dark gray",
+      aes(x = -.05, y = y5, xend = .05, yend = y5),
+      data = formatted_df
+    ) +
+    geom_segment(
+      colour = "dark gray",
+      aes(x = -.05, y = y95, xend = .05, yend = y95),
+      data = formatted_df
+    ) +
     theme_minimal() +
     # Places the measurement on the plot
-    geom_hline(yintercept = compared_value,
-               size = 2,
-               color = "#005DA9",
-               alpha = 0.90) +
+    # geom_hline(yintercept = compared_value,
+    #            size = 2,
+    #            color = "#005DA9",
+    #            alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
-    scale_y_continuous(trans = log_trans(), 
-                       breaks = base_breaks(),
-                       limits = c(0.1,max_scale),
+    scale_y_continuous(
+                       # trans = log_trans(),
+                       # breaks = base_breaks(),
+                       limits = c(0.00,max_scale),
                        labels = function(x) {
                          # This function generates and formats the label
-                         formatted_labels <- 
+                         formatted_labels <-
                            comma_format(big.mark = ",",
                                         decimal.mark = ".",
                                         accuracy = .1)(x)
-                         
-                         # this appends the measurement unit to the first label on 
+
+                         # this appends the measurement unit to the first label on
                          # the x-axis
                          formatted_labels[1] <- paste(formatted_labels[1],
                                                       measure_unit)
                          formatted_labels
-                       }) + 
+                       }) +
     theme(axis.title.y = element_blank(),
-          axis.text.y = element_blank(), 
+          axis.text.y = element_blank(),
           plot.margin = margin(0,0,-9,0,unit = "pt"),
           axis.text.x = element_text(size = 12),
           panel.grid.minor = element_blank(),
