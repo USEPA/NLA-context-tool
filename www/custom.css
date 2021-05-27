@@ -144,3 +144,27 @@ input[type=number]::-webkit-outer-spin-button {
     appearance: none;
     margin: 0; 
 }
+
+#flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+#year_collected_wrapper {
+  width: 100%;
+}
+
+#year_selector_wrapper {
+  width: calc(100% - 5px);
+  margin-left: 5px;
+}
+
+.selectize-input {
+  height: 25px;
+  line-height: 15px;
+}
+
+#year_selector_wrapper .selectize-control {
+  margin-bottom: -7px;
+}

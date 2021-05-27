@@ -1,0 +1,100 @@
+---
+title: "Log Scale"
+author: "Camden Blatchly"
+date: "5/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE, echo=FALSE}
+source("setup.R")
+library(knitr)
+library(patchwork)
+
+indicators_12 <- indicators_2012$indicator %>% unique()
+subpops_12 <- indicators_2012$subpopulation %>% unique()
+
+indicators_17 <- indicators_2017$indicator %>% unique()
+subpops_17 <- indicators_2017$subpopulation %>% unique()
+
+```
+
+
+```{r, echo=FALSE}
+
+# estimates_zero <- indicators %>% dplyr::filter(statistic %in% bp_stats, estimate == 0.0)
+# write_csv(estimates_zero, "../../zero_estimates.csv")
+# kable(estimates_zero)
+
+```
+
+```{r, echo=FALSE}
+
+# estimates_too_low <- indicators %>% dplyr::filter(statistic %in% bp_stats, estimate < 0.1)
+# write_csv(estimates_too_low, "../../estimates_too_low.csv")
+# kable(estimates_too_low)
+
+```
+
+```{r, echo=FALSE}
+# estimates_too_high <- NA
+# for (this_indicator in indicators_12) {
+#   max_scale_val <- scale_max[this_indicator][[1]]
+#   print(max_scale_val)
+#   indicator_estimates_too_high <- indicators %>% dplyr::filter(indicator == this_indicator, statistic %in% bp_stats, estimate > max_scale_val)
+#   if (is.na(estimates_too_high)) {
+#     estimates_too_high <- indicator_estimates_too_high
+#   }
+#   estimates_too_high <- bind_rows(estimates_too_high, indicator_estimates_too_high)
+# }
+# 
+# write_csv(estimates_too_high, "../../estimates_too_high.csv")
+# kable(estimates_too_high)
+
+```
+
+
+```{r fig.height=1, fig.width=10, results='asis', echo=FALSE}
+
+for (indicator in indicators_12) {
+  for (subpop in subpops_12) {
+    cat("\n###### Indicator: ", indicator, " Subpop: ", subpop, " (2012 compared to 2017)\n")
+    p1 <- indicator_plot(indicators_2012, subpop, indicator, measurements[indicator][[1]], scale_max[indicator][[1]]) + theme(plot.margin = unit(c(0,10,0,10), "pt"))
+    p2 <- indicator_plot(indicators_2017, subpop, indicator, measurements[indicator][[1]], scale_max[indicator][[1]]) + theme(plot.margin = unit(c(0,10,0,10), "pt"))
+    p <- p1 | p2
+    print(p)
+    cat("  \n")
+  }
+}
+
+```
+
+```{r, results = 'asis', echo=FALSE}
+
+# for (indicator in indicators_12) {
+#   for (subpop in subpops_12) {
+#     cat("\n## (2012) Indicator: ", indicator, " Subpop: ", subpop, "\n")
+#     p <- indicator_plot(indicators_2012, subpop, indicator, measurements[indicator][[1]], scale_max[indicator][[1]])
+#     print(p)
+#     cat("  \n")
+#   }
+# }
+
+```
+
+
+```{r, results = 'asis', echo=FALSE}
+# 
+# for (indicator in indicators_17) {
+#   for (subpop in subpops_17) {
+#     cat("\n## (2017) Indicator: ", indicator, " Subpop: ", subpop, "\n")
+#     print(indicator_plot(indicators_2017, subpop, indicator, measurements[indicator][[1]], scale_max[indicator][[1]]))
+#     cat("  \n")
+#   }
+# }
+
+```

@@ -22,6 +22,24 @@ round2 = function(x, n=1) {
   z*posneg
 }
 
+getStat <- function(df, stat, max_scale) {
+  stat_val <- df %>%
+    filter(statistic == stat) %>%
+    pull(estimate) %>% 
+    max()
+  
+  # if (stat_val > max_scale) {
+  #   stat_val <- max_scale
+  # }
+  
+  # if (stat_val < 0.01) {
+  #   stat_val <- 0.01
+  # }
+  
+  
+  return(stat_val)
+}
+
 # Indicator Plot Function
 # This function takes the following arguments:
 # df: The indicators data frame
@@ -41,50 +59,73 @@ indicator_plot <- function(df,
   # Set the maximum value for the scale as the greatest 
   # between the compared value and the maximum value for the
   # indicator in the data set.
-  max_scale <- max(scale_max[indi][[1]],compared_value)
-  
+  max_scale <- compared_value #max(scale_max[indi][[1]],compared_value)
+
   # Generates the box plot for displaying in the site
   
-  df %>% 
+  df <- df %>% 
     filter(subpopulation == sub_pop,
            indicator == indi,
-           statistic %in% bp_stats) %>% 
-    ggplot(aes(y = estimate)) +
-    geom_boxplot(coef = 5,
-                 width = .2,
+           statistic %in% bp_stats)
+  
+  formatted_df <- data.frame(
+    x = 0,
+    y5 = getStat(df, "5Pct", max_scale),
+    y25 = getStat(df, "25Pct", max_scale),
+    y50 = getStat(df, "50Pct", max_scale),
+    y75 = getStat(df, "75Pct", max_scale),
+    y95 = getStat(df, "95Pct", max_scale)
+  )
+
+  formatted_df %>%
+    ggplot(aes(x)) +
+    geom_boxplot(width = .2,
                  outlier.shape = NA,
-                 color = "darkgray") +
-    # Comment out the line the below to hide the whiskers
-    stat_boxplot(geom = 'errorbar',
-                 coef = 6, # you can adjust this to adjust the whisker size
-                 width = 0.085,
-                 color = "darkgray") +
+                 color = "darkgray",
+                 mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
+                 stat = "identity") +
+    # # Comment out the line the below to hide the whiskers
+    # stat_boxplot(geom = 'errorbar',
+    #              coef = 6, # you can adjust this to adjust the whisker size
+    #              width = 0.085,
+    #              color = "darkgray") +
+    geom_segment(
+      colour = "dark gray",
+      aes(x = -.05, y = y5, xend = .05, yend = y5),
+      data = formatted_df
+    ) +
+    geom_segment(
+      colour = "dark gray",
+      aes(x = -.05, y = y95, xend = .05, yend = y95),
+      data = formatted_df
+    ) +
     theme_minimal() +
     # Places the measurement on the plot
-    geom_hline(yintercept = compared_value,
-               size = 2,
-               color = "#005DA9",
-               alpha = 0.90) +
+    # geom_hline(yintercept = compared_value,
+    #            size = 2,
+    #            color = "#005DA9",
+    #            alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
-    scale_y_continuous(trans = log_trans(), 
-                       breaks = base_breaks(),
-                       limits = c(0.1,max_scale),
+    scale_y_continuous(
+                       # trans = log_trans(),
+                       # breaks = base_breaks(),
+                       limits = c(0.00,max_scale),
                        labels = function(x) {
                          # This function generates and formats the label
-                         formatted_labels <- 
+                         formatted_labels <-
                            comma_format(big.mark = ",",
                                         decimal.mark = ".",
                                         accuracy = .1)(x)
-                         
-                         # this appends the measurement unit to the first label on 
+
+                         # this appends the measurement unit to the first label on
                          # the x-axis
                          formatted_labels[1] <- paste(formatted_labels[1],
                                                       measure_unit)
                          formatted_labels
-                       }) + 
+                       }) +
     theme(axis.title.y = element_blank(),
-          axis.text.y = element_blank(), 
+          axis.text.y = element_blank(),
           plot.margin = margin(0,0,-9,0,unit = "pt"),
           axis.text.x = element_text(size = 12),
           panel.grid.minor = element_blank(),
@@ -161,6 +202,16 @@ indicator_min <- function(df,sub_pop,indi) {
     min()
 }
 
+# Return plain text description of the time frame (e.g., 'June to September')
+get_survey_timeframe <- function(nla_year) {
+  if (nla_year == "2017" || nla_year == 2017) {
+    return('May to October')
+  }
+  else {
+    return('June to September')
+  }
+}
+
 # Calculates the margin of error for an indicator compared to
 # a comparison value
 # Arguments:
@@ -207,16 +258,17 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
 # area_name: The EPA region
 #
 # returns: A text string of the header
-generate_header <- function(sub_pop,indicator,value,lake_name,area_name) {
-  max_indi_val <- indicator_max(estimates,sub_pop,indicator)
-  min_indi_val <- indicator_min(estimates,sub_pop,indicator)
+generate_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year) {
+  
+  max_indi_val <- indicator_max(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
+  min_indi_val <- indicator_min(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
   
   if (value > max_indi_val) {
     pct_value <- "'s value is above the highest NLA result."
   } else if (value < min_indi_val) {
     pct_value <- "'s value is at or below the lowest NLA result."
   } else {
-    pct_num <- ordinal_format()(percentile_value(estimates,sub_pop,indicator,value))
+    pct_num <- ordinal_format()(percentile_value(dplyr::filter(estimates, year == nla_year),sub_pop,indicator,value))
     pct_value <- glue(" is in the {pct_num} percentile.")
   }
   
@@ -288,7 +340,7 @@ format_measure_unit <- function(measure_unit) {
 # margin_of_error: The margin of error
 png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name = "your lake", 
                          year = 2018, indi_text = "NA", name = "Alabama",
-                         session_url = "", margin_of_error) {
+                         session_url = "", margin_of_error, nla_year = 2012, survey_timeframe = 'June to September') {
   
   # Looks up the english version of the indicator name
   indi_english <- indicator_english[indi]
@@ -309,9 +361,9 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   }
   
   # The summary paragraph at the top of the image
-  top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in 2012. {indi_text}"
+  top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in {nla_year}. {indi_text}"
   
-  bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s 2012 U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from June to September 2012. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
+  bottom_text <- "†IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
   
   values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. A logarithmic scale is used to accommodate extreme values. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
 
@@ -335,12 +387,12 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
 
   # Generate Title Sections
   header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
-  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr),"†"),"white","#005DA9",1.75 * length_ratio)
-  local <- indicator_plot(indicators,sub_pop,indi,measure_unit,compared_value)
-  regional <- indicator_plot(indicators,epa_region,indi,measure_unit,compared_value)
-  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name),"†"),"white","#005DA9",1.75 * length_ratio)
-  national <- indicator_plot(indicators,"All_Sites",indi,measure_unit,compared_value)
-  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally"),"†"),"white","#005DA9",1.75 * length_ratio)
+  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"†"),"white","#005DA9",1.75 * length_ratio)
+  local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value)
+  regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value)
+  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"†"),"white","#005DA9",1.75 * length_ratio)
+  national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value)
+  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"†"),"white","#005DA9",1.75 * length_ratio)
   
   # Plot sizing config.
   plot_height <- .95
