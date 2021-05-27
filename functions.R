@@ -32,9 +32,9 @@ getStat <- function(df, stat, max_scale) {
   #   stat_val <- max_scale
   # }
   
-  # if (stat_val < 0.01) {
-  #   stat_val <- 0.01
-  # }
+  if (stat_val < 0.01) {
+    stat_val <- 0.01
+  }
   
   
   return(stat_val)
@@ -108,15 +108,15 @@ indicator_plot <- function(df,
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
-                       # trans = log_trans(),
-                       # breaks = base_breaks(),
-                       limits = c(0.00,max_scale),
+                       trans = log_trans(),
+                       breaks = base_breaks(),
+                       limits = c(0.01,max_scale),
                        labels = function(x) {
                          # This function generates and formats the label
                          formatted_labels <-
                            comma_format(big.mark = ",",
                                         decimal.mark = ".",
-                                        accuracy = .1)(x)
+                                        accuracy = .01)(x)
 
                          # this appends the measurement unit to the first label on
                          # the x-axis
