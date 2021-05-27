@@ -59,7 +59,7 @@ indicator_plot <- function(df,
   # Set the maximum value for the scale as the greatest 
   # between the compared value and the maximum value for the
   # indicator in the data set.
-  max_scale <- compared_value #max(scale_max[indi][[1]],compared_value)
+  max_scale <- max(scale_max[indi][[1]],compared_value)
 
   # Generates the box plot for displaying in the site
   
@@ -101,10 +101,10 @@ indicator_plot <- function(df,
     ) +
     theme_minimal() +
     # Places the measurement on the plot
-    # geom_hline(yintercept = compared_value,
-    #            size = 2,
-    #            color = "#005DA9",
-    #            alpha = 0.90) +
+    geom_hline(yintercept = compared_value,
+               size = 2,
+               color = "#005DA9",
+               alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
