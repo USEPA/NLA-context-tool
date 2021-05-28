@@ -46,7 +46,7 @@ for (indi in indicators_12) {
            indicator == indi,
            statistic %in% bp_stats)
   
-    y5 <= getStat(df, "5Pct", 10000000000000)
+    y5 <- getStat(df, "5Pct", 10000000000000)
     y95 <- getStat(df, "95Pct", 10000000000000)
     
     cat("\n###### ", indi, " | ", subpop, " | 2017 (",y5, ", ", y95, ") \n")

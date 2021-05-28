@@ -111,7 +111,7 @@ indicator_plot <- function(df,
                        trans = log_trans(),
                        breaks = base_breaks(),
                        limits = c(0.01,max_scale),
-                       expand = c(0, 0),
+                       expand = expansion(mult=c(0.03, 0.05)),
                        labels = function(x) {
                          # This function generates and formats the label
                          formatted_labels <-
