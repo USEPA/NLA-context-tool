@@ -28,9 +28,9 @@ getStat <- function(df, stat, max_scale) {
     pull(estimate) %>% 
     max()
   
-  # if (stat_val > max_scale) {
-  #   stat_val <- max_scale
-  # }
+  if (stat_val > max_scale) {
+    stat_val <- max_scale
+  }
   
   if (stat_val < 0.01) {
     stat_val <- 0.01
@@ -111,6 +111,7 @@ indicator_plot <- function(df,
                        trans = log_trans(),
                        breaks = base_breaks(),
                        limits = c(0.01,max_scale),
+                       expand = c(0, 0),
                        labels = function(x) {
                          # This function generates and formats the label
                          formatted_labels <-
@@ -127,12 +128,12 @@ indicator_plot <- function(df,
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           plot.margin = margin(0,0,-9,0,unit = "pt"),
-          axis.text.x = element_text(size = 12),
+          axis.text.x = element_text(size = 9),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(colour = "#efefef", fill = NA, size = 1),
           plot.background = element_rect(
             fill = NA,
-            colour = "#efefef",
+            colour = "white",
             size = 1
           )) +
     coord_flip() +

@@ -1,7 +1,5 @@
 ---
-title: "Log Scale"
-author: "Camden Blatchly"
-date: "5/26/2021"
+title: "Scale Version 2"
 output: html_document
 ---
 
@@ -14,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 source("setup.R")
 library(knitr)
 library(patchwork)
+library(dplyr)
 
 indicators_12 <- indicators_2012$indicator %>% unique()
 subpops_12 <- indicators_2012$subpopulation %>% unique()
@@ -24,15 +23,35 @@ subpops_17 <- indicators_2017$subpopulation %>% unique()
 ```
 
 
-```{r fig.height=1, fig.width=10, results='asis', echo=FALSE}
+```{r fig.height=1, fig.width=15, results='asis', echo=FALSE}
 
-for (indicator in indicators_12) {
+for (indi in indicators_12) {
   for (subpop in subpops_12) {
-    cat("\n###### Indicator: ", indicator, " Subpop: ", subpop, " (2012 compared to 2017)\n")
-    p1 <- indicator_plot(indicators_2012, subpop, indicator, measurements[indicator][[1]], scale_max[indicator][[1]]) + theme(plot.margin = unit(c(0,10,0,10), "pt"))
-    p2 <- indicator_plot(indicators_2017, subpop, indicator, measurements[indicator][[1]], scale_max[indicator][[1]]) + theme(plot.margin = unit(c(0,10,0,10), "pt"))
-    p <- p1 | p2
-    print(p)
+    
+    df <- indicators_2012 %>% 
+      dplyr::filter(subpopulation == subpop,
+           indicator == indi,
+           statistic %in% bp_stats)
+  
+    y5 <- getStat(df, "5Pct", 10000000000000)
+    y95 <- getStat(df, "95Pct", 10000000000000)
+    
+    cat("\n###### ", indi, " | ", subpop, " | 2012 (",y5, ", ", y95, ") \n")
+    p1 <- indicator_plot(indicators_2012, subpop, indi, measurements[indi][[1]], scale_max[indi][[1]])# + theme(plot.margin = unit(c(0,10,0,10), "pt"))
+    print(p1)
+    cat("  \n")
+    
+    df <- indicators_2017 %>% 
+      dplyr::filter(subpopulation == subpop,
+           indicator == indi,
+           statistic %in% bp_stats)
+  
+    y5 <= getStat(df, "5Pct", 10000000000000)
+    y95 <- getStat(df, "95Pct", 10000000000000)
+    
+    cat("\n###### ", indi, " | ", subpop, " | 2017 (",y5, ", ", y95, ") \n")
+    p2 <- indicator_plot(indicators_2017, subpop, indi, measurements[indi][[1]], scale_max[indi][[1]])# + theme(plot.margin = unit(c(0,10,0,10), "pt"))
+    print(p2)
     cat("  \n")
   }
 }
