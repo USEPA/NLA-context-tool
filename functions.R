@@ -94,7 +94,7 @@ indicator_plot <- function(df,
     ) 
   }
   
-  if (getStat(df, "95Pct") <= scaled_limits) {
+  if (getStat(df, "95Pct") <= scaled_limits[2]) {
     plot <- plot + geom_segment(
       colour = "dark gray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
