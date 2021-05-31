@@ -94,7 +94,7 @@ indicator_plot <- function(df,
     ) 
   }
   
-  if (getStat(df, "95Pct") <= scaled_limits[2]) {
+  if (getStat(df, "95Pct") <= scaled_limits) {
     plot <- plot + geom_segment(
       colour = "dark gray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
@@ -104,10 +104,10 @@ indicator_plot <- function(df,
   
   plot <- plot + theme_minimal() +
     # Places the measurement on the plot
-    # geom_hline(yintercept = compared_value,
-    #            size = 2,
-    #            color = "#005DA9",
-    #            alpha = 0.90) +
+    geom_hline(yintercept = compared_value,
+               size = 2,
+               color = "#005DA9",
+               alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
