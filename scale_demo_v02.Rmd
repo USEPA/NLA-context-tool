@@ -33,8 +33,8 @@ for (indi in indicators_12) {
            indicator == indi,
            statistic %in% bp_stats)
   
-    y5 <- getStat(df, "5Pct", 10000000000000)
-    y95 <- getStat(df, "95Pct", 10000000000000)
+    y5 <- getStat(df, "5Pct")
+    y95 <- getStat(df, "95Pct")
     
     cat("\n###### ", indi, " | ", subpop, " | 2012 (",y5, ", ", y95, ") \n")
     p1 <- indicator_plot(indicators_2012, subpop, indi, measurements[indi][[1]], scale_max[indi][[1]])# + theme(plot.margin = unit(c(0,10,0,10), "pt"))
@@ -46,8 +46,8 @@ for (indi in indicators_12) {
            indicator == indi,
            statistic %in% bp_stats)
   
-    y5 <- getStat(df, "5Pct", 10000000000000)
-    y95 <- getStat(df, "95Pct", 10000000000000)
+    y5 <- getStat(df, "5Pct")
+    y95 <- getStat(df, "95Pct")
     
     cat("\n###### ", indi, " | ", subpop, " | 2017 (",y5, ", ", y95, ") \n")
     p2 <- indicator_plot(indicators_2017, subpop, indi, measurements[indi][[1]], scale_max[indi][[1]])# + theme(plot.margin = unit(c(0,10,0,10), "pt"))

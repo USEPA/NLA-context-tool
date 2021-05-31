@@ -22,20 +22,11 @@ round2 = function(x, n=1) {
   z*posneg
 }
 
-getStat <- function(df, stat, max_scale) {
+getStat <- function(df, stat) {
   stat_val <- df %>%
     filter(statistic == stat) %>%
     pull(estimate) %>% 
     max()
-  
-  if (stat_val > max_scale) {
-    stat_val <- max_scale
-  }
-  
-  if (stat_val < 0.1) {
-    stat_val <- 0.1
-  }
-  
   
   return(stat_val)
 }
@@ -60,6 +51,7 @@ indicator_plot <- function(df,
   # between the compared value and the maximum value for the
   # indicator in the data set.
   max_scale <- max(scale_max[indi][[1]],compared_value)
+  scaled_limits <- c(0.075, max_scale*1.1)
 
   # Generates the box plot for displaying in the site
   
@@ -70,48 +62,61 @@ indicator_plot <- function(df,
   
   formatted_df <- data.frame(
     x = 0,
-    y5 = getStat(df, "5Pct", max_scale),
-    y25 = getStat(df, "25Pct", max_scale),
-    y50 = getStat(df, "50Pct", max_scale),
-    y75 = getStat(df, "75Pct", max_scale),
-    y95 = getStat(df, "95Pct", max_scale)
+    y5 = if (getStat(df, "5Pct") >= scaled_limits[1]) getStat(df, "5Pct") else scaled_limits[1],
+    y25 = getStat(df, "25Pct"),
+    y50 = getStat(df, "50Pct"),
+    y75 = getStat(df, "75Pct"),
+    y95 = if (getStat(df, "95Pct") <= scaled_limits[2]) getStat(df, "95Pct") else scaled_limits[2]
   )
-
-  formatted_df %>%
+  
+  formatted_df_without_limits <- data.frame(
+    x = 0,
+    y5 = getStat(df, "5Pct"),
+    y25 = getStat(df, "25Pct"),
+    y50 = getStat(df, "50Pct"),
+    y75 = getStat(df, "75Pct"),
+    y95 = getStat(df, "95Pct")
+  )
+  
+  plot <- formatted_df %>%
     ggplot(aes(x)) +
     geom_boxplot(width = .2,
                  outlier.shape = NA,
                  color = "darkgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
-                 stat = "identity") +
-    # # Comment out the line the below to hide the whiskers
-    # stat_boxplot(geom = 'errorbar',
-    #              coef = 6, # you can adjust this to adjust the whisker size
-    #              width = 0.085,
-    #              color = "darkgray") +
-    geom_segment(
+                 stat = "identity")
+  
+  if (getStat(df, "5Pct") >= scaled_limits[1]) {
+    plot <- plot + geom_segment(
       colour = "dark gray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
-      data = formatted_df
-    ) +
-    geom_segment(
+      data = formatted_df_without_limits
+    ) 
+  }
+  
+  if (getStat(df, "95Pct") <= scaled_limits[2]) {
+    plot <- plot + geom_segment(
       colour = "dark gray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
-      data = formatted_df
-    ) +
-    theme_minimal() +
+      data = formatted_df_without_limits
+    )
+  } 
+  
+  plot <- plot + theme_minimal() +
     # Places the measurement on the plot
-    geom_hline(yintercept = compared_value,
-               size = 2,
-               color = "#005DA9",
-               alpha = 0.90) +
+    # geom_hline(yintercept = compared_value,
+    #            size = 2,
+    #            color = "#005DA9",
+    #            alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
                        trans = log_trans(),
-                       breaks = base_breaks(),
-                       limits = c(0.1,max_scale),
-                       expand = expansion(mult=c(0.03, 0.05)),
+                       breaks = axisTicks(log10(range(c(0.1, max_scale), na.rm = TRUE)), log = TRUE, n = 20), #base_breaks(),
+                       limits = scaled_limits,
+                       expand = c(0, 0),
+                       oob = oob_keep,
+                       # expand = expansion(mult=c(0, 0)),
                        labels = function(x) {
                          # This function generates and formats the label
                          formatted_labels <-
@@ -138,6 +143,8 @@ indicator_plot <- function(df,
           )) +
     coord_flip() +
     labs(y = "")
+  
+  return(plot)
 }
 
 
