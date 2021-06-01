@@ -72,7 +72,7 @@ ui <- fixedPage(
                                intro_text()))),
       fixedRow(column(width = 12,
                       htmlOutput("overview_text")),
-               style = "height: 100px;"),
+               style = "min-height: 100px;"),
       fixedRow(column(width = 12,
                       htmlOutput("state_header"))),
       fixedRow(column(width = 12,
@@ -351,10 +351,11 @@ server <- function(input, output,session) {
       indicator_name <- indicator_english[input$indicator_selector][[1]] %>% str_replace_all(" ","-")
       value <- input_value_d()
       state_abbr <- state_abbr <- state_abbrs[input$state_input][[1]]
+      nla_year <- input$year_selector
       
       
       if (valid_inputs()) {
-        glue("NLA-2012-Context_{indicator_name}_{value}_{state_abbr}.png") 
+        glue("NLA-{nla_year}-Context_{indicator_name}_{value}_{state_abbr}.png") 
       } else {
         "invalid_inputs.png"
       }
@@ -380,7 +381,7 @@ server <- function(input, output,session) {
                                 nla_year = input$year_selector,
                                 survey_timeframe = get_survey_timeframe(input$year_selector)
                                 ),
-               width = 10.4,height = 9.69) }
+               width = 10.4,height = 9.69, type="cairo", device="png") }
       else {
         ggsave(file,invalid_image_file())
       }
