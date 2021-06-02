@@ -195,6 +195,8 @@ percentile_value <- function(df,sub_pop,indi,comp_value) {
 # sub_pop: The subpopulation to filter by. It'll be a state, region or all sites
 # indi: the indicator to filter by. 
 indicator_max <- function(df,sub_pop,indi) {
+  print(nrow(filter(df, subpopulation == sub_pop,
+                    indicator == indi)))
   df %>% 
     filter(subpopulation == sub_pop,
            indicator == indi)  %>%
