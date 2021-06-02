@@ -138,10 +138,15 @@ indicator_list <- list("Secchi Depth" = "SECCHI",
                   "Total Nitrogen" = "NTL",
                   "Chlorophyll-a" = "CHL")
 
-scale_max <- list("PTL" = 4100,
-                  'SECCHI' = 31,
-                  'CHL' = 250,
-                  'NTL' = 12001)
+# scale_max <- list("PTL" = 4100,
+#                   'SECCHI' = 31,
+#                   'CHL' = 250,
+#                   'NTL' = 12001)
+
+scale_max <- list("PTL" = 1200,
+                  'SECCHI' = 17,
+                  'CHL' = 325,
+                  'NTL' = 6250)
 
 ## Estimates 
 estimates_2012 <- read_csv("data/combined_estimates_2012.csv") %>% tibble::add_column(year = 2012)
