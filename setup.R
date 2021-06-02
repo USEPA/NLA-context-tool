@@ -148,6 +148,7 @@ scale_max <- list("PTL" = 1200,
                   'CHL' = 325,
                   'NTL' = 6250)
 
+
 ## Estimates 
 estimates_2012 <- read_csv("data/combined_estimates_2012.csv") %>% tibble::add_column(year = 2012)
 estimates_2017 <- read_csv("data/combined_estimates_2017_v03.csv") %>% tibble::add_column(year = 2017)

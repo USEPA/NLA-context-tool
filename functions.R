@@ -50,9 +50,8 @@ indicator_plot <- function(df,
   # Set the maximum value for the scale as the greatest 
   # between the compared value and the maximum value for the
   # indicator in the data set.
-  max_scale <- max(scale_max[indi][[1]],compared_value)
-  scaled_limits <- c(0.075, max_scale*1.1)
-  #scaled_limits <- c(0.0, max_scale)
+  max_scale <- max(scale_max[indi][[1]], compared_value)
+  scaled_limits <- c(0.075, max_scale)
 
   # Generates the box plot for displaying in the site
   
@@ -113,12 +112,12 @@ indicator_plot <- function(df,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
                        trans = log_trans(),
-                       breaks = axisTicks(log10(range(c(0.1, max_scale), na.rm = TRUE)), log = TRUE, n = 20), #base_breaks(),
+                       breaks = axisTicks(log10(range(c(0.1, (max_scale/1.3)), na.rm = TRUE)), log = TRUE, n = 20), #base_breaks(),
                        #breaks = breaks_extended(n = 6),
                        limits = scaled_limits,
-                       expand = expansion(mult = c(0.03, 0)),
+                       # expand = expansion(mult = c(0.03, 0)),
                        oob = oob_keep,
-                       # expand = expansion(mult=c(0, 0)),
+                       expand = expansion(mult=c(0, 0)),
                        labels = function(x) {
                          # This function generates and formats the label
                          formatted_labels <-
@@ -195,8 +194,6 @@ percentile_value <- function(df,sub_pop,indi,comp_value) {
 # sub_pop: The subpopulation to filter by. It'll be a state, region or all sites
 # indi: the indicator to filter by. 
 indicator_max <- function(df,sub_pop,indi) {
-  print(nrow(filter(df, subpopulation == sub_pop,
-                    indicator == indi)))
   df %>% 
     filter(subpopulation == sub_pop,
            indicator == indi)  %>%

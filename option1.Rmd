@@ -1,10 +1,9 @@
 ---
-title: "Log Scale with Limits Scaled to Maximum Values"
+title: "Log Scale with limits scaled to the maximum values in the data"
 output: html_document
 ---
 
-- Charts are scaled from zero to a fixed upper limit for each indicator
-- Values exceeding the upper limit are clipped at the upper range border
+- Charts are scaled from 0.075 to the largest value for each indicator
 
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
