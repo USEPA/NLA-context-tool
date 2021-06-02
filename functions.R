@@ -51,8 +51,8 @@ indicator_plot <- function(df,
   # between the compared value and the maximum value for the
   # indicator in the data set.
   max_scale <- max(scale_max[indi][[1]],compared_value)
-  #scaled_limits <- c(0.075, max_scale*1.1)
-  scaled_limits <- c(0.0, max_scale)
+  scaled_limits <- c(0.075, max_scale*1.1)
+  #scaled_limits <- c(0.0, max_scale)
 
   # Generates the box plot for displaying in the site
   
@@ -105,18 +105,18 @@ indicator_plot <- function(df,
   
   plot <- plot + theme_minimal() +
     # Places the measurement on the plot
-    # geom_hline(yintercept = compared_value,
-    #            size = 2,
-    #            color = "#005DA9",
-    #            alpha = 0.90) +
+    geom_hline(yintercept = compared_value,
+               size = 2,
+               color = "#005DA9",
+               alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
-                       # trans = log_trans(),
-                       # breaks = axisTicks(log10(range(c(0.1, max_scale), na.rm = TRUE)), log = TRUE, n = 20), #base_breaks(),
-                       breaks = breaks_extended(n = 6),
+                       trans = log_trans(),
+                       breaks = axisTicks(log10(range(c(0.1, max_scale), na.rm = TRUE)), log = TRUE, n = 20), #base_breaks(),
+                       #breaks = breaks_extended(n = 6),
                        limits = scaled_limits,
-                       expand = expansion(mult = c(0.025, 0)),
+                       expand = expansion(mult = c(0.03, 0)),
                        oob = oob_keep,
                        # expand = expansion(mult=c(0, 0)),
                        labels = function(x) {
