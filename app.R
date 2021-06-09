@@ -302,7 +302,8 @@ server <- function(input, output,session) {
       indicator_plot(state_abbr,
                      input$indicator_selector,
                      measure_unit,
-                     input_value_d())},
+                     input_value_d(),
+                     getScaleMax(state_abbr, input$indicator_selector))},
     height = plot_height)
   
   valid_inputs <- reactive({
@@ -322,13 +323,15 @@ server <- function(input, output,session) {
       filter(state_name == input$state_input) %>% 
       pull(epa_region)
     measure_unit <- measurements[input$indicator_selector][[1]]
+    state_abbr <- state_abbrs[input$state_input][[1]]
     
     indicators %>% 
       dplyr::filter(year == input$year_selector) %>%
       indicator_plot(region_name,
                      input$indicator_selector,
                      measure_unit,
-                     input_value_d())},
+                     input_value_d(),
+                     getScaleMax(state_abbr, input$indicator_selector))},
     height = plot_height)
   
   output$national_plot <- renderPlot({
@@ -342,7 +345,8 @@ server <- function(input, output,session) {
       indicator_plot("All_Sites",
                      input$indicator_selector,
                      measure_unit,
-                     input_value_d())},
+                     input_value_d(),
+                     getScaleMax(state_abbr, input$indicator_selector))},
     height = plot_height)
   
   output$png_export <- downloadHandler(

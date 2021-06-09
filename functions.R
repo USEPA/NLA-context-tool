@@ -31,6 +31,63 @@ getStat <- function(df, stat) {
   return(stat_val)
 }
 
+# Boxplot Scale Max
+# This function takes the following arguments:
+# sub_pop: The state to plot
+# indi: The indicator to plot
+#
+# returns: the maximum value for that indicator across state, epa region, and allsites values
+
+getScaleMax <- function(sub_pop, indi) {
+  
+  print(paste("subpop", sub_pop, "indi ", indi))
+  epa_region_row <- region_lookup_table %>%
+    filter(state_abbr == sub_pop)
+  
+  epa_region <- epa_region_row[1, "epa_region"] %>% toString()
+  
+  subpop_max <- indicators %>%
+    filter(indicator == indi) %>%
+    filter(subpopulation == sub_pop) %>%
+    filter(statistic == "95Pct") %>%
+    pull(estimate) %>% 
+    max()
+  
+  region_max <- indicators %>%
+    filter(indicator == indi) %>%
+    filter(subpopulation == epa_region) %>%
+    filter(statistic == "95Pct") %>%
+    pull(estimate) %>% 
+    max()
+  
+  allsites_max <- indicators %>%
+    filter(indicator == indi) %>%
+    filter(subpopulation == "All_Sites") %>%
+    filter(statistic == "95Pct") %>%
+    pull(estimate) %>% 
+    max()
+  
+  indicator_state_allsites_max <- max(subpop_max, region_max, allsites_max)
+  
+  if (indi == "PTL" && epa_region == "Region_9") {
+    indicator_state_allsites_max <- min(1000, indicator_state_allsites_max)
+  }
+  else if (indi == "CHL" && epa_region == "Region_9") {
+    indicator_state_allsites_max <- min(300, indicator_state_allsites_max)
+  }
+  else if (indi == "CHL" && epa_region == "Region_8") {
+    indicator_state_allsites_max <- min(307, indicator_state_allsites_max)
+  }
+  else if (indi == "NTL" && epa_region == "Region_9") {
+    indicator_state_allsites_max <- min(5000, indicator_state_allsites_max)
+  }
+  else if (indi == "NTL" && epa_region == "Region_7") {
+    indicator_state_allsites_max <- min(6000, indicator_state_allsites_max)
+  }
+  
+  return(indicator_state_allsites_max)
+}
+
 # Indicator Plot Function
 # This function takes the following arguments:
 # df: The indicators data frame
@@ -45,13 +102,14 @@ indicator_plot <- function(df,
                            sub_pop,
                            indi,
                            measure_unit,
-                           compared_value = 0.0) {
+                           compared_value = 0.0,
+                           upper_limit) {
   
-  # Set the maximum value for the scale as the greatest 
-  # between the compared value and the maximum value for the
-  # indicator in the data set.
-  max_scale <- max(scale_max[indi][[1]], compared_value)
-  scaled_limits <- c(0.075, max_scale)
+
+  max_scale <- max(upper_limit, compared_value)
+
+  print(paste("max scale is ", max_scale))
+  scale_limits <- c(0.0, max_scale * 1.025)
 
   # Generates the box plot for displaying in the site
   
@@ -62,11 +120,11 @@ indicator_plot <- function(df,
   
   formatted_df <- data.frame(
     x = 0,
-    y5 = if (getStat(df, "5Pct") >= scaled_limits[1]) getStat(df, "5Pct") else scaled_limits[1],
+    y5 = if (getStat(df, "5Pct") >= scale_limits[1]) getStat(df, "5Pct") else scale_limits[1],
     y25 = getStat(df, "25Pct"),
     y50 = getStat(df, "50Pct"),
     y75 = getStat(df, "75Pct"),
-    y95 = if (getStat(df, "95Pct") <= scaled_limits[2]) getStat(df, "95Pct") else scaled_limits[2]
+    y95 = if (getStat(df, "95Pct") <= scale_limits[2]) getStat(df, "95Pct") else scale_limits[2]
   )
   
   formatted_df_without_limits <- data.frame(
@@ -86,7 +144,8 @@ indicator_plot <- function(df,
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
                  stat = "identity")
   
-  if (getStat(df, "5Pct") >= scaled_limits[1]) {
+  # Add 5Pct cap if within limits
+  if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
       colour = "dark gray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
@@ -94,7 +153,8 @@ indicator_plot <- function(df,
     ) 
   }
   
-  if (getStat(df, "95Pct") <= scaled_limits[2]) {
+  # Add 95Pct cap if within limits
+  if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
       colour = "dark gray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
@@ -111,13 +171,10 @@ indicator_plot <- function(df,
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
-                       trans = log_trans(),
-                       breaks = axisTicks(log10(range(c(0.1, (max_scale/1.3)), na.rm = TRUE)), log = TRUE, n = 20), #base_breaks(),
-                       #breaks = breaks_extended(n = 6),
-                       limits = scaled_limits,
-                       # expand = expansion(mult = c(0.03, 0)),
+                       breaks = axisTicks(c(0.0, max_scale), FALSE, NULL, 6),
+                       limits = scale_limits,
+                       expand = expansion(mult = c(0.03, 0)),
                        oob = oob_keep,
-                       expand = expansion(mult=c(0, 0)),
                        labels = function(x) {
                          # This function generates and formats the label
                          formatted_labels <-
@@ -397,10 +454,10 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   # Generate Title Sections
   header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
   local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"^†"),"white","#005DA9",1.75 * length_ratio)
-  local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value)
-  regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value)
+  local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
+  regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
   regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"^†"),"white","#005DA9",1.75 * length_ratio)
-  national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value)
+  national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
   national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"^†"),"white","#005DA9",1.75 * length_ratio)
   
   # Plot sizing config.

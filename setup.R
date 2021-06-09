@@ -143,10 +143,16 @@ indicator_list <- list("Secchi Depth" = "SECCHI",
 #                   'CHL' = 250,
 #                   'NTL' = 12001)
 
-scale_max <- list("PTL" = 1200,
-                  'SECCHI' = 17,
-                  'CHL' = 325,
-                  'NTL' = 6250)
+# scale_max <- list("PTL" = 1200,
+#                   'SECCHI' = 17,
+#                   'CHL' = 325,
+#                   'NTL' = 6250)
+
+#
+scale_max <- list("PTL" = 2000,
+                  'SECCHI' = 30,
+                  'CHL' = 310,
+                  'NTL' = 5400)
 
 
 ## Estimates 
