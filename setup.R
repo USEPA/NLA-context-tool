@@ -122,7 +122,7 @@ state_abbrs <-
 
 ## Indcators
 indicators_2012 <- read_csv("data/combined_indicators_2012.csv") %>% tibble::add_column(year = 2012)
-indicators_2017 <- read_csv("data/combined_indicators_2017_v02.csv") %>% tibble::add_column(year = 2017)
+indicators_2017 <- read_csv("data/combined_indicators_2017_v03.csv") %>% tibble::add_column(year = 2017)
 indicators <- dplyr::bind_rows(indicators_2012, indicators_2017)
 
 #indicators <- indicators_2012
@@ -138,14 +138,26 @@ indicator_list <- list("Secchi Depth" = "SECCHI",
                   "Total Nitrogen" = "NTL",
                   "Chlorophyll-a" = "CHL")
 
-scale_max <- list("PTL" = 4100,
-                  'SECCHI' = 31,
-                  'CHL' = 250,
-                  'NTL' = 12001)
+# scale_max <- list("PTL" = 4100,
+#                   'SECCHI' = 31,
+#                   'CHL' = 250,
+#                   'NTL' = 12001)
+
+# scale_max <- list("PTL" = 1200,
+#                   'SECCHI' = 17,
+#                   'CHL' = 325,
+#                   'NTL' = 6250)
+
+#
+scale_max <- list("PTL" = 2000,
+                  'SECCHI' = 30,
+                  'CHL' = 310,
+                  'NTL' = 5400)
+
 
 ## Estimates 
 estimates_2012 <- read_csv("data/combined_estimates_2012.csv") %>% tibble::add_column(year = 2012)
-estimates_2017 <- read_csv("data/combined_estimates_2017_v02.csv") %>% tibble::add_column(year = 2017)
+estimates_2017 <- read_csv("data/combined_estimates_2017_v03.csv") %>% tibble::add_column(year = 2017)
 estimates <- dplyr::bind_rows(estimates_2012, estimates_2017)
 
 # estimates <- estimates_2012
