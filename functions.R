@@ -40,7 +40,6 @@ getStat <- function(df, stat) {
 
 getScaleMax <- function(sub_pop, indi) {
   
-  print(paste("subpop", sub_pop, "indi ", indi))
   epa_region_row <- region_lookup_table %>%
     filter(state_abbr == sub_pop)
   
@@ -108,7 +107,6 @@ indicator_plot <- function(df,
 
   max_scale <- max(upper_limit, compared_value)
 
-  print(paste("max scale is ", max_scale))
   scale_limits <- c(0.0, max_scale * 1.025)
 
   # Generates the box plot for displaying in the site
@@ -209,7 +207,7 @@ indicator_plot <- function(df,
 # Percentile Value
 # Gets the percentile that a measurement falls into for an indicator
 # Arguments
-# df: the indicators data frame
+# df: the estimates data frame
 # sub_pop: The sub population of the indicator, in this case the state
 # indi: The indicator to use
 # comp_value: The value to compare
@@ -453,12 +451,12 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
 
   # Generate Title Sections
   header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
-  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"^†"),"white","#005DA9",1.75 * length_ratio)
+  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.75 * length_ratio)
   local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
   regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"^†"),"white","#005DA9",1.75 * length_ratio)
+  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.75 * length_ratio)
   national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"^†"),"white","#005DA9",1.75 * length_ratio)
+  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.75 * length_ratio)
   
   # Plot sizing config.
   plot_height <- .95
