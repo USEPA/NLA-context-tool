@@ -64,7 +64,7 @@ intro_text <- function() {
                 tags$li(tags$i("Total Nitrogen"), " (another such nutrient)"),
                 tags$li(tags$i("Chlorophyll")," a (a measure of algal population)"))),
   
-    div(tags$strong("How Do I Get Started?")," Please read the instructions on the left then enter data.  Output will appear once you have entered data into all required fields (marked with an *). Entering the lake name is optional."),
+    div(tags$strong("How Do I Get Started?")," Please read the instructions on the left then enter data. Output will appear once you have entered data into all fields. Entering the lake name is optional."),
 
     div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, click the “?” icon on the left."),
   

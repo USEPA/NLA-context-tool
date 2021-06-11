@@ -26,7 +26,7 @@ ui <- fixedPage(
                compares to a nationwide representative
                sample. After inputting data, you can ',downloadLink("png_export","click here to export an image of the results.")),
       div(style = "color: #0097DC",
-          tags$strong("Select an Indicator*", class = "input_header"),
+          tags$strong("Select an Indicator", class = "input_header"),
           selectInput("indicator_selector",
                       NULL,
                       choices =  c("Choose an indicator",indicator_list)),
@@ -37,7 +37,7 @@ ui <- fixedPage(
           div(
             id="flex-row",
             div(id="year_collected_wrapper",
-              div(tags$strong("Year Data Collected*",class = "input_header"),class = "value_header_fix"),
+              div(tags$strong("Year Data Collected",class = "input_header"),class = "value_header_fix"),
               numericInput("year_input",
                            NULL,
                            NA)
@@ -50,10 +50,10 @@ ui <- fixedPage(
                           choices =  c(2012, 2017))
             )
           ),
-          div(tags$strong("Lake Name",class = "input_header"),class = "value_header_fix"),
+          div(tags$strong("Lake Name (optional)",class = "input_header"),class = "value_header_fix"),
           textInput("lake_name_input",
                     NULL),
-          div(tags$strong("Select State*",class = "input_header"),class = "value_header_fix"),
+          div(tags$strong("Select State",class = "input_header"),class = "value_header_fix"),
           selectInput("state_input",
                       NULL,
                       c("",state_names[order(names(state_names))]),
@@ -119,7 +119,7 @@ server <- function(input, output,session) {
     } else {
       default_value <- input$indicator_value
     }
-    tags$strong(glue("Input Your Data{indicator_text}*"),class = "input_header")
+    tags$strong(glue("Input Your Data{indicator_text}"),class = "input_header")
     
   })
   
@@ -197,8 +197,7 @@ server <- function(input, output,session) {
     survey_timeframe <- get_survey_timeframe(nla_year)
     
     tags$div(class = "disclaimer",
-             tags$sup("†"),
-             tags$strong("Important:"),
+             tags$strong("*Important:"),
              glue(disclaimer_text),tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla","EPA's website.", 
                                           target = "_blank"))
   })
@@ -214,7 +213,7 @@ server <- function(input, output,session) {
     text <- generate_header(state_abbr,indicator,value,lake_name(),state_abbr, nla_year)
     
     tags$div(class = "plot_header",
-             HTML(glue("{text}<sup>†</sup>")))
+             HTML(glue("{text}*")))
   })
   
   output$region_header <- renderUI({
@@ -237,7 +236,7 @@ server <- function(input, output,session) {
     text <- generate_header(epa_region,indicator,value,lake_name(),area_name, nla_year)
     
     tags$div(class = "plot_header",
-             HTML(glue("{text}<sup>†</sup>")))
+             HTML(glue("{text}*")))
   })
   
   output$national_header <- renderUI({
@@ -250,7 +249,7 @@ server <- function(input, output,session) {
     text <- generate_header("All_Sites",indicator,value,lake_name(),"Nationally", nla_year)
     
     tags$div(class = "plot_header",
-             HTML(glue("{text}<sup>†</sup>")))
+             HTML(glue("{text}*")))
   })
   
   output$region_title <- renderText({
