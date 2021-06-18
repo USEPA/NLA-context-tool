@@ -100,7 +100,7 @@ body {
 }
 
 .input_header {
-  color: #0097DC;
+  color: #005da4;
   margin-bottom: 0;
   font-size: 16px;
   padding-top: 4px;
@@ -169,3 +169,7 @@ input[type=number]::-webkit-outer-spin-button {
 #year_selector_wrapper .selectize-control {
   margin-bottom: -7px;
 }
+
+a:link { color: #0000EE; }
+a:visited { color: #551A8B; }
+a:hover { color: #0000EE; }
