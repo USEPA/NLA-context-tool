@@ -68,7 +68,7 @@ intro_text <- function() {
 
     div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, click the “?” icon on the left."),
   
-    div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Safari using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens"),
+    div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Edge using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens"),
   
     div(tags$strong("How Do I Learn More?")," Visit the NLA’s site at", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", "epa.gov/national-aquatic-resource-surveys/nla."))
   )

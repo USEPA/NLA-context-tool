@@ -4,6 +4,8 @@ test_that("Round2 Returns appropriate value", {
   expect_equal(round2(1.11),1.1)
 })
 
+# 2012 Estimates
+
 test_that("Indicator_min returns the minimum - Alabama", {
   expect_equal(indicator_min(dplyr::filter(estimates, year == 2012),"AL","CHL"),1.27)
   expect_equal(indicator_min(dplyr::filter(estimates, year == 2012),"AL","SECCHI"),0.525)
