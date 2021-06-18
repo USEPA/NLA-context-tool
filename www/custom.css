@@ -47,6 +47,7 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 10px;
 }
 
 .sidebar_header {
@@ -122,8 +123,8 @@ body {
   padding-right: 10px;
   padding-top: 14px;
   font-size: 16px;
-  color: #005da4;
-  min-height: 582px;
+  color: #333;
+  min-height: 592px;
 }
 
 #default_container > div {
