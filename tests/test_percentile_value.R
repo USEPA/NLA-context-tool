@@ -122,3 +122,52 @@ test_that("Percentile Values work for Region_1 - NTL", {
    expect_equal(percentile_value(dplyr::filter(estimates, year == 2012),"AL","PTL",7500),100)
  })
  
+
+ #####################################################################################################
+ 
+ # 2017 data tests
+ 
+ test_that("Percentile Values work for All Sites - CHL", {
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",0), -Inf)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",1.26), 5)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",8.7), 34)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",24.16), 69)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",96.4), 94)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",145.33), 96)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"All_Sites","CHL",3000), 100)
+ })
+ 
+ test_that("Percentile Values work for Region_1 - NTL", {
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL",0), -Inf)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL", 158), 0)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL", 254), 11)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL", 399), 43)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL", 679),71)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL", 1091), 78)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"Region_1","NTL", 75000),100)
+ })
+ 
+ # State
+ 
+ test_that("Percentile Values work for AL - PTL", {
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"AL","PTL",0), -Inf)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"AL","PTL",9.161193182), 0)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"AL","PTL",37.6), 87)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"AL","PTL",85.8), 98)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"AL","PTL",251.98), 100)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"AL","PTL",12000), 100)
+ })
+ 
+ test_that("Percentile Values work for ND - SECCHI", {
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",0), 0)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",.5), 22)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",1), 54)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",1.9), 90)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",4), 99)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",4.6), 100)
+    expect_equal(percentile_value(dplyr::filter(estimates, year == 2017),"ND","SECCHI",100), 100)
+ })
+ 
+ 
+ 
+ 
