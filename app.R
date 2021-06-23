@@ -24,7 +24,7 @@ ui <- fixedPage(
       tags$div(class = "instructions",
                'Input data for one lake below to see how it
                compares to a nationwide representative
-               sample. After inputting data, you can ',downloadLink("png_export","click here to export an image of the results.")),
+               sample. Afterward, ',downloadLink("png_export","click here"), "to export an image of the results."),
       div(style = "color: #0097DC",
           tags$strong("Select an Indicator", class = "input_header"),
           selectInput("indicator_selector",
