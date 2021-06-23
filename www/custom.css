@@ -23,7 +23,7 @@ body {
 }
 
 .plot_header {
-    background-color: #005DA9;
+    background-color: #005da4;
     color: white;
     text-align: center;
     padding: 5px 0;
@@ -65,7 +65,7 @@ body {
 }
 
 .user_data {
-  color: #005DA9;
+  color: #005da4;
   font-weight: 600;
 }
 
@@ -171,5 +171,5 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: -7px;
 }
 
-a:link { color: #4C61B1; }
+a:link { color: #005da4; }
 a:visited { color: #551A8B; }
