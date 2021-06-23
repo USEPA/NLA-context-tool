@@ -287,28 +287,50 @@ get_survey_timeframe <- function(nla_year) {
 # returns: a float margin of error
 margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
-  margin_of_error <- 
+  # margin_of_error <- 
+  #   df %>% 
+  #   filter(subpopulation == sub_pop,
+  #          indicator == indi) %>% 
+  #   filter(value <= comp_value) %>% 
+  #   filter(value == max(value)) %>% 
+  #   mutate(lcb = case_when(
+  #     round(value) == comp_value ~ lcb95pct_p,
+  #     round(value) < comp_value ~ lcb95pct_p,
+  #     round(value) > comp_value ~ 0.0),
+  #     ucb = case_when(
+  #       round(value) == comp_value ~ ucb95pct_p,
+  #       round(value) < comp_value ~ ucb95pct_p,
+  #       round(value) > comp_value ~ 0.0),
+  #     percentile = case_when(
+  #       value == comp_value ~ estimate_p,
+  #       value < comp_value ~ estimate_p,
+  #       value > comp_value ~ 0.0),
+  #     margin = if_else(percentile - lcb > percentile - ucb,
+  #                      percentile - lcb,
+  #                      percentile - ucb)) %>% 
+  #   pull(margin)
+  
+
+  filtered_df <- 
     df %>% 
     filter(subpopulation == sub_pop,
            indicator == indi) %>% 
-    filter(value <= comp_value) %>% 
-    filter(value == max(value)) %>% 
-    mutate(lcb = case_when(
-      round(value) == comp_value ~ lcb95pct_p,
-      round(value) < comp_value ~ lcb95pct_p,
-      round(value) > comp_value ~ 0.0),
-      ucb = case_when(
-        round(value) == comp_value ~ ucb95pct_p,
-        round(value) < comp_value ~ ucb95pct_p,
-        round(value) > comp_value ~ 0.0),
-      percentile = case_when(
-        value == comp_value ~ estimate_p,
-        value < comp_value ~ estimate_p,
-        value > comp_value ~ 0.0),
-      margin = if_else(percentile - lcb > percentile - ucb,
-                       percentile - lcb,
-                       percentile - ucb)) %>% 
-    pull(margin)
+    filter(value <= comp_value)
+  
+  percentile_row <- filtered_df[which.max(filtered_df$estimate_p),]
+  
+  ucb <- percentile_row[1, "ucb95pct_p"] %>% as.numeric()
+  lcb <- percentile_row[1, "lcb95pct_p"] %>% as.numeric()
+  est <- percentile_row[1, "estimate_p"] %>% as.numeric()
+  
+  ucb_diff <- ucb - est
+  lcb_diff <- est - lcb
+  
+  margin_of_error <- round2(max(ucb_diff, lcb_diff))
+  
+    # %>% 
+    # pull(estimate_p) %>% 
+    # max()
   
   ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)
 }
