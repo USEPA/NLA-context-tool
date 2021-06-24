@@ -328,10 +328,6 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
   margin_of_error <- round2(max(ucb_diff, lcb_diff))
   
-    # %>% 
-    # pull(estimate_p) %>% 
-    # max()
-  
   ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)
 }
 

@@ -135,18 +135,26 @@ server <- function(input, output,session) {
       }
       
     tags$h3(class = "main_header",
-            glue(title_text)) }
+            HTML(paste(
+                "How does ", title_lake_name, " Compare to Other",HTML('&nbsp;'), "U.S.", HTML('&nbsp;'), "Lakes?", sep=""
+              )
+            )
+      ) 
+    }
     else {
       title_text <- "Welcome to EPA’s Lake Comparison Tool"
       
       tags$h3(class = "main_header",
-              style = "background-color:#005da4;text-align:left;padding-left:10px;",
-              glue(title_text),
+              style = "background-color:#005da4;text-align:left;padding-left:10px;display:flex;justify-content:space-between;",
+              # glue(title_text),
+              HTML(
+                paste("Welcome to EPA's Lake Comparison", HTML('&nbsp;'), "Tool", sep="")
+              ),
               tags$img(src = "epa_logo.png",
                        align = "right",
                        width = 73,
                        height = 24,
-                       style = "margin-top: 1px;margin-right: 4px"))
+                       style = "margin-top: 1px;margin-right: 4px;margin-left: 10px;"))
     }
   })
   
