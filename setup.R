@@ -70,7 +70,7 @@ intro_text <- function() {
   
     div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Edge using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens."),
   
-    div(HTML(paste(tags$strong("How Do I Learn More?"), " Visit EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = "")))
+    div(HTML(paste(tags$strong("How Do I Learn More?"), " Visit the EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = "")))
   )
 }
 
