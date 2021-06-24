@@ -136,7 +136,7 @@ server <- function(input, output,session) {
       
     tags$h3(class = "main_header",
             HTML(paste(
-                "How does ", title_lake_name, " Compare to Other",HTML('&nbsp;'), "U.S.", HTML('&nbsp;'), "Lakes?", sep=""
+                "How Does ", title_lake_name, " Compare to Other",HTML('&nbsp;'), "U.S.", HTML('&nbsp;'), "Lakes?", sep=""
               )
             )
       ) 
