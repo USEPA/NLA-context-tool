@@ -218,10 +218,9 @@ server <- function(input, output,session) {
     state_abbr <- state_abbrs[input$state_input][[1]]
     nla_year <- input$year_selector
     
-    text <- generate_header(state_abbr,indicator,value,lake_name(),state_abbr, nla_year)
+    header_html <- generate_html_header(state_abbr,indicator,value,lake_name(),state_abbr, nla_year)
     
-    tags$div(class = "plot_header",
-             HTML(glue("{text}*")))
+    tags$div(class = "plot_header", header_html)
   })
   
   output$region_header <- renderUI({
@@ -241,10 +240,9 @@ server <- function(input, output,session) {
     indicator <- input$indicator_selector
     nla_year <- input$year_selector
     
-    text <- generate_header(epa_region,indicator,value,lake_name(),area_name, nla_year)
+    html_header <- generate_html_header(epa_region,indicator,value,lake_name(),area_name, nla_year)
     
-    tags$div(class = "plot_header",
-             HTML(glue("{text}*")))
+    tags$div(class = "plot_header", html_header)
   })
   
   output$national_header <- renderUI({
@@ -254,10 +252,9 @@ server <- function(input, output,session) {
     indicator <- input$indicator_selector
     nla_year <- input$year_selector
     
-    text <- generate_header("All_Sites",indicator,value,lake_name(),"Nationally", nla_year)
+    html_header <- generate_html_header("All_Sites",indicator,value,lake_name(),"Nationally", nla_year)
     
-    tags$div(class = "plot_header",
-             HTML(glue("{text}*")))
+    tags$div(class = "plot_header", html_header)
   })
   
   output$region_title <- renderUI({

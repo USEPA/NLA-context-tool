@@ -363,6 +363,41 @@ generate_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year
   
 }
 
+# This function generates an HTML header
+# sub_pop: the sub_population to use. In this case the state, region or all_sites
+# indicator: the indicator to use
+# value: the lake measurement value
+# lake_name: The name of the lake
+# area_name: The EPA region
+#
+# returns: A text string of the header
+generate_html_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year) {
+  
+  # HTML(paste(tags$strong("How Do I Learn More?"), " Visit the EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = ""))
+  
+  max_indi_val <- indicator_max(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
+  min_indi_val <- indicator_min(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
+  
+  if (value > max_indi_val) {
+    pct_value <- HTML(paste("'s value is above the highest NLA", HTML("&nbsp;"), "result.", sep=""))
+  } else if (value < min_indi_val) {
+    pct_value <- HTML(paste("'s value is at or below the lowest NLA", HTML("&nbsp;"), "result.", sep=""))
+  } else {
+    pct_num <- ordinal_format()(percentile_value(dplyr::filter(estimates, year == nla_year),sub_pop,indicator,value))
+    pct_value <- HTML(paste(" is in the ", pct_num, HTML("&nbsp"), "percentile.", sep=""))
+  }
+  
+  if (area_name == "Nationally") {
+    #glue("{area_name}, {lake_name}{pct_value}")
+    HTML(paste(area_name, ", ", lake_name, pct_value, sep=""))
+  } else {
+    # glue("In {area_name}, {lake_name}{pct_value}")
+    HTML(paste("In ", area_name, ", ", lake_name, pct_value, sep=""))
+  }
+  
+  
+}
+
 # Creates a section title for exported PNG.
 # Arguments:
 # text: The text for the seciton
