@@ -2,6 +2,14 @@ test_that("Round2 Returns appropriate value", {
   expect_equal(round2(1.45,1),1.5)
   expect_equal(round2(1.44,1),1.4)
   expect_equal(round2(1.11),1.1)
+  expect_equal(round2(1.5767, 0), 2)
+  expect_equal(round2(1.45, 0), 1)
+  expect_equal(round2(1.49999, 0), 1)
+  expect_equal(round2(1.51199, 0), 2)
+  expect_equal(round2(0.4449, 0), 0)
+  expect_equal(round2(0.4449, 1), 0.4)
+  expect_equal(round2(0.5449, 0), 1)
+  expect_equal(round2(0.5449, 1), 0.5)
 })
 
 # 2012 Estimates

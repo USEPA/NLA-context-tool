@@ -193,7 +193,7 @@ server <- function(input, output,session) {
     lake_value <- input_value_d()
     margin_of_error <- 
       margin_calculator(dplyr::filter(estimates, year == input$year_selector),state_abbr,input$indicator_selector,lake_value) %>%
-      round()
+      round2(0)
     
     state_name <- input$state_input
     indi_text <- 
@@ -388,7 +388,7 @@ server <- function(input, output,session) {
                                 indi_text = indicator_text[input$indicator_selector],
                                 name = input$state_input,
                                 session_url = session_url,
-                                margin_of_error = round(margin_calculator(dplyr::filter(estimates, year == input$year_selector),state_abbr,input$indicator_selector,lake_value)),
+                                margin_of_error = round2(margin_calculator(dplyr::filter(estimates, year == input$year_selector),state_abbr,input$indicator_selector,lake_value), 0),
                                 nla_year = input$year_selector,
                                 survey_timeframe = get_survey_timeframe(input$year_selector)
                                 ),

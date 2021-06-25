@@ -239,7 +239,7 @@ percentile_value <- function(df,sub_pop,indi,comp_value) {
   filtered_df %>% 
     filter(value <= comp_value) %>% 
     pull(estimate_p) %>% 
-    round() %>% 
+    round2(0) %>% 
     max()
 }
 
@@ -326,7 +326,7 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   ucb_diff <- ucb - est
   lcb_diff <- est - lcb
   
-  margin_of_error <- round2(max(ucb_diff, lcb_diff))
+  margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
   
   ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)
 }
@@ -387,7 +387,6 @@ invalid_image_file <- function() {
   
   invalid_title +
     filler +
-    # ggparagraph("Please provide required inputs before exporting results image.") +
     text_grob("Please provide required inputs before exporting results image.") +
     filler +
     plot_layout(ncol = 1, heights = c(.1,.1,.1,1))
@@ -468,36 +467,36 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   length_ratio <- min(lake_name_limit/name_length,1)
 
   # Generate Title Sections
-  header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
-  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.75 * length_ratio)
+  header_title <- section_title(glue(title_text),"white","#0097DC",1.9 * length_ratio)
+  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.7 * length_ratio)
   local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
   regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.75 * length_ratio)
+  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.7 * length_ratio)
   national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.75 * length_ratio)
+  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.7 * length_ratio)
   
   # Plot sizing config.
   plot_height <- .95
   header_height <- 0.705882353
-  top_paragraph <- 2.8
+  top_paragraph <- 1.4
   
   header_title +
     filler +
-    ggparagraph(glue(top_text), family = "Arial", size = 18.5) +
+    ggparagraph(glue(top_text), family = "Arial", size = 15, lineheight = 1.1, color = "black") +
     filler +
     local_title + filler + local + 
     regional_title + filler + regional +
     national_title + filler  + national +
     filler +
-    ggparagraph(glue(bottom_text), family = "Arial", size = 11) +
-    ggparagraph(glue(values_text), family = "Arial", size = 11) +
-    ggparagraph(glue(url_text), family = "Arial", size = 11) +
+    ggparagraph(glue(bottom_text), family = "Arial", size = 12.5, color = "black") +
+    ggparagraph(glue(values_text), family = "Arial", size = 12.5, color = "black") +
+    ggparagraph(glue(url_text), family = "Arial", size = 12.5, color = "black") +
     plot_layout(ncol = 1, heights = c(header_height,
                                       .21,
                                       top_paragraph,.2,
                                       header_height, .1, plot_height,
                                       header_height, .1, plot_height,
-                                      header_height, 0.1, plot_height,
+                                      header_height, .1, plot_height,
                                       0.2,
                                       1.8,
                                       1.2,
