@@ -58,7 +58,7 @@ ui <- fixedPage(
                       NULL,
                       c("",state_names[order(names(state_names))]),
                       ""),
-          tags$h5(textOutput("region_title"), id = "map_title"),
+          tags$h5(htmlOutput("region_title"), id = "map_title"),
           imageOutput("region_map",
                       inline = TRUE))
     ),
@@ -260,7 +260,7 @@ server <- function(input, output,session) {
              HTML(glue("{text}*")))
   })
   
-  output$region_title <- renderText({
+  output$region_title <- renderUI({
     
     region_name <- 
       region_lookup_table %>% 
@@ -270,9 +270,9 @@ server <- function(input, output,session) {
     state_name <- input$state_input
     
     if (state_name == "") {
-      "This tool provides data for your state's EPA region,\nin addition to data at the national and state levels."
+      tags$p("This tool provides data for your state's EPA region,\nin addition to data at the national and state levels.")
     } else {
-      glue("{state_name} is in EPA {region_name}.")
+      tags$p(tags$br(), glue("{state_name} is in EPA {region_name}."))
     }
     
     

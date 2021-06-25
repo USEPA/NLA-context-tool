@@ -20,6 +20,7 @@ body {
     color: white;
     text-align: center;
     padding: 5px 0;
+    font-weight: bold;
 }
 
 .plot_header {
@@ -79,7 +80,7 @@ body {
 
 }
 .sidebar_header {
-  font-weight: 500;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
@@ -123,13 +124,17 @@ body {
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 14px;
-  font-size: 16px;
+  font-size: 18px;
   color: #333;
   min-height: 592px;
 }
 
 #default_container > div {
-  margin-bottom: 10px;
+  margin-bottom: 13px;
+}
+
+#default_container ul {
+  margin-top: 5px;
 }
 
 #default_text {
