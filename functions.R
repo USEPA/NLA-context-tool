@@ -389,10 +389,10 @@ generate_html_header <- function(sub_pop,indicator,value,lake_name,area_name,nla
   
   if (area_name == "Nationally") {
     #glue("{area_name}, {lake_name}{pct_value}")
-    HTML(paste(area_name, ", ", lake_name, pct_value, sep=""))
+    HTML(paste(area_name, ", ", lake_name, pct_value, "*", sep=""))
   } else {
     # glue("In {area_name}, {lake_name}{pct_value}")
-    HTML(paste("In ", area_name, ", ", lake_name, pct_value, sep=""))
+    HTML(paste("In ", area_name, ", ", lake_name, pct_value, "*", sep=""))
   }
   
   
@@ -502,13 +502,13 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   length_ratio <- min(lake_name_limit/name_length,1)
 
   # Generate Title Sections
-  header_title <- section_title(glue(title_text),"white","#0097DC",1.9 * length_ratio)
-  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.7 * length_ratio)
+  header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
+  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.4 * length_ratio)
   local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
   regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.7 * length_ratio)
+  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.4 * length_ratio)
   national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.7 * length_ratio)
+  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.4 * length_ratio)
   
   # Plot sizing config.
   plot_height <- .95
