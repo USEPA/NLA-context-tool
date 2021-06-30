@@ -1,20 +1,20 @@
 source("setup.R")
 
-# addResourcePath(prefix = 'static', directoryPath = '~/www')
+addResourcePath(prefix = 'static', directoryPath = '~/www')
 options(bitmapType = 'cairo', device = 'png')
 
 ui <- fixedPage(
   # This is required for the bit of javascript used on line 79
   tags$head(
     useShinyjs(),
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "static/custom.css")
   ),
   
   sidebarLayout(
     # Side bar layout lives here
     sidebarPanel(
       tags$div("Instructions",class = "sidebar_header",
-               dropdownButton(tags$img(src = "help-tooltip.png",align = "right",
+               dropdownButton(tags$img(src = "static/help-tooltip.png",align = "right",
                                        height = 650,
                                        width = 1033),
                               size = "xs",
@@ -150,7 +150,7 @@ server <- function(input, output,session) {
               HTML(
                 paste("Welcome to EPA's Lake Comparison", HTML('&nbsp;'), "Tool", sep="")
               ),
-              tags$img(src = "epa_logo.png",
+              tags$img(src = "static/epa_logo.png",
                        align = "right",
                        width = 73,
                        height = 24,
@@ -407,6 +407,6 @@ server <- function(input, output,session) {
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server)
-# shiny::runApp(list(ui = ui, server = server), host="0.0.0.0", port=strtoi(Sys.getenv("PORT")))
+#shinyApp(ui = ui, server = server)
+shiny::runApp(list(ui = ui, server = server), host="0.0.0.0", port=strtoi(Sys.getenv("PORT")))
 
