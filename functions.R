@@ -317,6 +317,10 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
            indicator == indi) %>% 
     filter(value <= comp_value)
   
+  if (nrow(filtered_df) == 0) {
+    return(0)
+  }
+  
   percentile_row <- filtered_df[which.max(filtered_df$estimate_p),]
   
   ucb <- percentile_row[1, "ucb95pct_p"] %>% as.numeric()

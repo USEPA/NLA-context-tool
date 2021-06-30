@@ -179,7 +179,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #year_selector_wrapper .selectize-control {
-  margin-bottom: -7px;
+  margin-bottom: -6.6px;
 }
 
 a:link { color: #005da4; }
