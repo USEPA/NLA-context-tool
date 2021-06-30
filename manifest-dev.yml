@@ -1,8 +1,9 @@
 applications:
 - name: nla-lake-context-tool-dev
-  memory: 256M
+  memory: 2G
   routes:
-    - route: nla-lake-context-tool-dev.app.cloud.gov
+    - route: nla-lake-context-tool-dev-test.app.cloud.gov
   disk_quota: 1G
   buildpacks:
      - r_buildpack
+  command: R -f shiny.R
