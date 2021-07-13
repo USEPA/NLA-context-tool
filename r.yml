@@ -5,6 +5,6 @@ packages:
   packages:
     - name: shinyjs
     - name: dplyr
-    - name: readr
     - name: ggpubr
     - name: shinyWidgets
+    - name: patchwork
