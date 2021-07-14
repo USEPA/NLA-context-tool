@@ -171,7 +171,7 @@ indicator_plot <- function(df,
     scale_y_continuous(
                        breaks = axisTicks(c(0.0, max_scale), FALSE, NULL, 6),
                        limits = scale_limits,
-                       expand = expansion(mult = c(0.03, 0)),
+                       expand = expansion(mult = c(0.05, 0)),
                        oob = oob_keep,
                        labels = function(x) {
                          # This function generates and formats the label
@@ -189,7 +189,7 @@ indicator_plot <- function(df,
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           plot.margin = margin(0,0,-9,0,unit = "pt"),
-          axis.text.x = element_text(size = 8),
+          axis.text.x = element_text(size = 9),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(colour = "#efefef", fill = NA, size = 1),
           plot.background = element_rect(
