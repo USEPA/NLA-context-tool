@@ -171,7 +171,7 @@ indicator_plot <- function(df,
     scale_y_continuous(
                        breaks = axisTicks(c(0.0, max_scale), FALSE, NULL, 6),
                        limits = scale_limits,
-                       expand = expansion(mult = c(0.03, 0)),
+                       expand = expansion(mult = c(0.04, 0)),
                        oob = oob_keep,
                        labels = function(x) {
                          # This function generates and formats the label
