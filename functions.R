@@ -189,7 +189,7 @@ indicator_plot <- function(df,
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           plot.margin = margin(0,0,-9,0,unit = "pt"),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(size = 8),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(colour = "#efefef", fill = NA, size = 1),
           plot.background = element_rect(
