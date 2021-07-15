@@ -370,6 +370,8 @@ server <- function(input, output,session) {
     },
     content =  function(file) {
 
+      ggsave_scale <- 1.2
+      
       if (valid_inputs()) {
         state_abbr <- state_abbrs[input$state_input][[1]]
         lake_value <- input_value_d()
@@ -389,7 +391,7 @@ server <- function(input, output,session) {
                                 nla_year = input$year_selector,
                                 survey_timeframe = get_survey_timeframe(input$year_selector)
                                 ),
-               width = 10.4,height = 9.69, type="cairo", device="png") }
+               width = 10.4 * ggsave_scale, height = 9.69 * ggsave_scale, type="cairo", device="png", units="in", dpi = 300) }
       else {
         ggsave(file,invalid_image_file())
       }
