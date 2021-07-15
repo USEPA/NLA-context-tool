@@ -7,6 +7,30 @@ ui <- fixedPage(
   # This is required for the bit of javascript used on line 79
   tags$head(
     useShinyjs(),
+    tags$script('
+        var dimension = [0, 0];
+        
+        var delay = 250;
+        var timeout = false;
+        
+        $(document).on("shiny:connected", function(e) {
+            dimension[0] = window.innerWidth;
+            dimension[1] = window.innerHeight;
+            Shiny.onInputChange("dimension", dimension);
+        });
+        
+        $(window).resize(function(e) {
+        
+          // clear the timeout
+          clearTimeout(timeout);
+          // start timing for event "completion"
+          timeout = setTimeout(function() {
+            dimension[0] = window.innerWidth;
+            dimension[1] = window.innerHeight;
+            Shiny.onInputChange("dimension", dimension);
+          }, delay);
+        });
+    '),
     tags$link(rel = "stylesheet", type = "text/css", href = "static/custom.css")
   ),
 
@@ -298,6 +322,8 @@ server <- function(input, output,session) {
 
   output$state_plot <- renderPlot({
     req(valid_inputs())
+    
+    window_inner_width <- input$dimension[1]
 
     measure_unit <- measurements[input$indicator_selector][[1]]
     state_abbr <- state_abbrs[input$state_input][[1]]
@@ -307,7 +333,8 @@ server <- function(input, output,session) {
                      input$indicator_selector,
                      measure_unit,
                      input_value_d(),
-                     getScaleMax(state_abbr, input$indicator_selector))},
+                     getScaleMax(state_abbr, input$indicator_selector),
+                     window_inner_width)},
     height = plot_height)
 
   valid_inputs <- reactive({
@@ -319,7 +346,8 @@ server <- function(input, output,session) {
 
   output$region_plot <- renderPlot({
     req(valid_inputs())
-
+    
+    window_inner_width <- input$dimension[1]
     state_abbr <- state_abbrs[input$state_input][[1]]
 
     region_name <-
@@ -335,12 +363,15 @@ server <- function(input, output,session) {
                      input$indicator_selector,
                      measure_unit,
                      input_value_d(),
-                     getScaleMax(state_abbr, input$indicator_selector))},
+                     getScaleMax(state_abbr, input$indicator_selector),
+                     window_inner_width)},
     height = plot_height)
 
   output$national_plot <- renderPlot({
     req(valid_inputs())
 
+    window_inner_width <- input$dimension[1]
+    
     state_abbr <- state_abbrs[input$state_input][[1]]
     measure_unit <- measurements[input$indicator_selector][[1]]
 
@@ -350,7 +381,8 @@ server <- function(input, output,session) {
                      input$indicator_selector,
                      measure_unit,
                      input_value_d(),
-                     getScaleMax(state_abbr, input$indicator_selector))},
+                     getScaleMax(state_abbr, input$indicator_selector),
+                     window_inner_width)},
     height = plot_height)
 
   output$png_export <- downloadHandler(

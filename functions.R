@@ -102,12 +102,18 @@ indicator_plot <- function(df,
                            indi,
                            measure_unit,
                            compared_value = 0.0,
-                           upper_limit) {
+                           upper_limit,
+                           window_inner_width = 0.04) {
   
 
   max_scale <- max(upper_limit, compared_value)
 
   scale_limits <- c(0.0, max_scale * 1.025)
+  
+  lower_expansion_multiplier <- 0.04
+  if (window_inner_width < 1200) {
+    lower_expansion_multiplier <- 0.08
+  }
 
   # Generates the box plot for displaying in the site
   
@@ -171,7 +177,7 @@ indicator_plot <- function(df,
     scale_y_continuous(
                        breaks = axisTicks(c(0.0, max_scale), FALSE, NULL, 6),
                        limits = scale_limits,
-                       expand = expansion(mult = c(0.04, 0)),
+                       expand = expansion(mult = c(lower_expansion_multiplier, 0)),
                        oob = oob_keep,
                        labels = function(x) {
                          # This function generates and formats the label
