@@ -103,7 +103,7 @@ indicator_plot <- function(df,
                            measure_unit,
                            compared_value = 0.0,
                            upper_limit,
-                           window_inner_width = 0.04) {
+                           window_inner_width = 1300) {
   
 
   max_scale <- max(upper_limit, compared_value)
