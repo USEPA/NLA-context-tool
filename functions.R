@@ -144,14 +144,14 @@ indicator_plot <- function(df,
     ggplot(aes(x)) +
     geom_boxplot(width = .2,
                  outlier.shape = NA,
-                 color = "darkgray",
+                 color = "dimgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
                  stat = "identity")
   
   # Add 5Pct cap if within limits
   if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
-      colour = "dark gray",
+      colour = "dimgray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
       data = formatted_df_without_limits
     ) 
@@ -160,7 +160,7 @@ indicator_plot <- function(df,
   # Add 95Pct cap if within limits
   if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
-      colour = "dark gray",
+      colour = "dimgray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
       data = formatted_df_without_limits
     )
@@ -198,6 +198,7 @@ indicator_plot <- function(df,
           axis.text.x = element_text(size = 7.5),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(colour = "#efefef", fill = NA, size = 1),
+          panel.grid.major = element_line(color = "dimgray"),
           plot.background = element_rect(
             fill = NA,
             colour = "white",
@@ -345,26 +346,18 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)
 }
 
-get_non_zero_margin_of_error <- function(df,sub_pop,indi) {
+get_non_zero_margin_of_error <- function(df, sub_pop, indi) {
   
-  percentile_row <- 
+  moe <- 
     df %>% 
     filter(subpopulation == sub_pop,
            indicator == indi) %>% 
-    mutate(conf_int = ucb95pct_p - lcb95pct_p) %>% 
-    filter(conf_int > 0) %>%
-    arrange(conf_int)
+    mutate(moe = ifelse(ucb95pct_p - estimate_p > estimate_p - lcb95pct_p, ucb95pct_p - estimate_p, estimate_p - lcb95pct_p)) %>% 
+    filter(moe > 0) %>%
+    pull(moe) %>%
+    min()
   
-  ucb <- percentile_row[1, "ucb95pct_p"] %>% as.numeric()
-  lcb <- percentile_row[1, "lcb95pct_p"] %>% as.numeric()
-  est <- percentile_row[1, "estimate_p"] %>% as.numeric()
-  
-  ucb_diff <- ucb - est
-  lcb_diff <- est - lcb
-  
-  margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
-  
-  return(ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)) 
+  return(moe)
 }
 
 
