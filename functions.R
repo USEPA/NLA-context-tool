@@ -324,7 +324,7 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
     filter(value <= comp_value)
   
   if (nrow(filtered_df) == 0) {
-    return(0)
+    return(get_non_zero_margin_of_error(df,sub_pop,indi))
   }
   
   percentile_row <- filtered_df[which.max(filtered_df$estimate_p),]
@@ -338,7 +338,33 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
   margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
   
+  if (margin_of_error == 0) {
+    return(get_non_zero_margin_of_error(df,sub_pop,indi))
+  }
+  
   ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)
+}
+
+get_non_zero_margin_of_error <- function(df,sub_pop,indi) {
+  
+  percentile_row <- 
+    df %>% 
+    filter(subpopulation == sub_pop,
+           indicator == indi) %>% 
+    mutate(conf_int = ucb95pct_p - lcb95pct_p) %>% 
+    filter(conf_int > 0) %>%
+    arrange(conf_int)
+  
+  ucb <- percentile_row[1, "ucb95pct_p"] %>% as.numeric()
+  lcb <- percentile_row[1, "lcb95pct_p"] %>% as.numeric()
+  est <- percentile_row[1, "estimate_p"] %>% as.numeric()
+  
+  ucb_diff <- ucb - est
+  lcb_diff <- est - lcb
+  
+  margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
+  
+  return(ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)) 
 }
 
 
