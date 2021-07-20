@@ -142,16 +142,18 @@ indicator_plot <- function(df,
   
   plot <- formatted_df %>%
     ggplot(aes(x)) +
-    geom_boxplot(width = .2,
+    geom_boxplot(width = .15,
+                 size = .25,
                  outlier.shape = NA,
-                 color = "darkgray",
+                 color = "dimgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
                  stat = "identity")
   
   # Add 5Pct cap if within limits
   if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
-      colour = "dark gray",
+      size = 0.25,
+      color = "dimgray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
       data = formatted_df_without_limits
     ) 
@@ -160,7 +162,8 @@ indicator_plot <- function(df,
   # Add 95Pct cap if within limits
   if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
-      colour = "dark gray",
+      size = 0.25,
+      color = "dimgray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
       data = formatted_df_without_limits
     )
@@ -194,10 +197,11 @@ indicator_plot <- function(df,
                        }) +
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
-          plot.margin = margin(0,0,-9,0,unit = "pt"),
+          plot.margin = margin(t = 0, r = 0, b = -9, l = 0, unit = "pt"),
           axis.text.x = element_text(size = 7.5),
           panel.grid.minor = element_blank(),
-          panel.border = element_rect(colour = "#efefef", fill = NA, size = 1),
+          panel.border = element_rect(color = "dimgray", fill = NA, size = 0.25),
+          panel.grid.major = element_line(color = "dimgray", size = 0.25, linetype = "dashed"),
           plot.background = element_rect(
             fill = NA,
             colour = "white",
@@ -324,7 +328,7 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
     filter(value <= comp_value)
   
   if (nrow(filtered_df) == 0) {
-    return(0)
+    return(get_non_zero_margin_of_error(df,sub_pop,indi))
   }
   
   percentile_row <- filtered_df[which.max(filtered_df$estimate_p),]
@@ -338,7 +342,25 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
   margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
   
+  if (margin_of_error == 0) {
+    return(get_non_zero_margin_of_error(df,sub_pop,indi))
+  }
+  
   ifelse(identical(margin_of_error, numeric(0)),0,margin_of_error)
+}
+
+get_non_zero_margin_of_error <- function(df, sub_pop, indi) {
+  
+  moe <- 
+    df %>% 
+    filter(subpopulation == sub_pop,
+           indicator == indi) %>% 
+    mutate(moe = ifelse(ucb95pct_p - estimate_p > estimate_p - lcb95pct_p, ucb95pct_p - estimate_p, estimate_p - lcb95pct_p)) %>% 
+    filter(moe > 0) %>%
+    pull(moe) %>%
+    min()
+  
+  return(moe)
 }
 
 
@@ -489,7 +511,7 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
   # The summary paragraph at the top of the image
   top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in {nla_year}. {indi_text}"
   
-  bottom_text <- "*IMPORTANT: Population estimates presented above are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Percentiles are rounded to the nearest whole number. Maximum margin of error for your percentile ranking in {name}: ±{margin_of_error}."
+  bottom_text <- "*IMPORTANT: These population estimates are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Percentiles are rounded to the nearest whole number. Estimated max. margin of error for {state_abbr} percentile ranking, based upon limited observations: ±{margin_of_error}."
   
   values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
 
