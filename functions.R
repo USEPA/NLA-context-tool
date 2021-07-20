@@ -142,7 +142,8 @@ indicator_plot <- function(df,
   
   plot <- formatted_df %>%
     ggplot(aes(x)) +
-    geom_boxplot(width = .2,
+    geom_boxplot(width = .15,
+                 size = .25,
                  outlier.shape = NA,
                  color = "dimgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
@@ -151,7 +152,8 @@ indicator_plot <- function(df,
   # Add 5Pct cap if within limits
   if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
-      colour = "dimgray",
+      size = 0.25,
+      color = "dimgray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
       data = formatted_df_without_limits
     ) 
@@ -160,7 +162,8 @@ indicator_plot <- function(df,
   # Add 95Pct cap if within limits
   if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
-      colour = "dimgray",
+      size = 0.25,
+      color = "dimgray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
       data = formatted_df_without_limits
     )
@@ -194,11 +197,11 @@ indicator_plot <- function(df,
                        }) +
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
-          plot.margin = margin(0,0,-9,0,unit = "pt"),
+          plot.margin = margin(t = 0, r = 0, b = -9, l = 0, unit = "pt"),
           axis.text.x = element_text(size = 7.5),
           panel.grid.minor = element_blank(),
-          panel.border = element_rect(colour = "#efefef", fill = NA, size = 1),
-          panel.grid.major = element_line(color = "dimgray"),
+          panel.border = element_rect(color = "dimgray", fill = NA, size = 0.25),
+          panel.grid.major = element_line(color = "dimgray", size = 0.25, linetype = "dashed"),
           plot.background = element_rect(
             fill = NA,
             colour = "white",
