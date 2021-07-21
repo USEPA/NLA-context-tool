@@ -143,7 +143,7 @@ indicator_plot <- function(df,
   plot <- formatted_df %>%
     ggplot(aes(x)) +
     geom_boxplot(width = .15,
-                 size = .25,
+                 size = .5,
                  outlier.shape = NA,
                  color = "dimgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
@@ -152,7 +152,7 @@ indicator_plot <- function(df,
   # Add 5Pct cap if within limits
   if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
-      size = 0.25,
+      size = 0.5,
       color = "dimgray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
       data = formatted_df_without_limits
@@ -162,7 +162,7 @@ indicator_plot <- function(df,
   # Add 95Pct cap if within limits
   if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
-      size = 0.25,
+      size = 0.5,
       color = "dimgray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
       data = formatted_df_without_limits
