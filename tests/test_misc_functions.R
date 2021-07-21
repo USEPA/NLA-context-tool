@@ -15,10 +15,10 @@ test_that("Round2 Returns appropriate value", {
 # Margin of Error Calculator
 
 test_that("Margin_calculator returns a non-zero margin of error when compared value is at lower and upper ends of data - Alabama - NTL", {
-  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 10), 0),  14)
-  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 17), 0),  14)
-  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 18000), 0),  14)
-  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 55000), 0),  14)
+  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 10), 1),  14.3)
+  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 17), 1),  14.3)
+  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 18000), 1),  14.3)
+  expect_equal(round2(margin_calculator(dplyr::filter(estimates, year == 2012), "AL", "NTL", 55000), 1),  14.3)
 })
 
 # 2012 Estimates

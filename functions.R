@@ -340,7 +340,7 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   ucb_diff <- ucb - est
   lcb_diff <- est - lcb
   
-  margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
+  margin_of_error <- round2(max(ucb_diff, lcb_diff), 1)
   
   if (margin_of_error == 0) {
     return(get_non_zero_margin_of_error(df,sub_pop,indi))
