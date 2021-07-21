@@ -36,25 +36,46 @@ header_text <- "You reported that {lake_name} in {state_name} ({state_abbrs[[sta
 disclaimer_text <- "These population estimates are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_text} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Percentiles are rounded to the nearest whole number. Estimated max. margin of error for {state_abbr} percentile ranking, based upon limited observations: ±{margin_of_error}. To learn about the NLA, please visit the "
 
 # Default landing page text
-intro_text <- function() {
+intro_text <- function(window_inner_width) {
 
-  tagList(
-    div("This tool was produced by the National Aquatic Resource Surveys (NARS) program of the U.S. Environmental Protection Agency (EPA). The NARS program conducts large-scale studies of the quality of the nation’s waters. One such study is the National Lakes Assessment (NLA)."),
-
-    div(tags$strong("What Can the Tool Do?"),"This tool allows you to input water quality data for a lake you care about, then see it compared to statistically representative data collected by the NLA.  You’ll view comparisons to the national, regional and state level. This is currently possible using 2012 and 2017 NLA data for any of four important and common indicators of water quality:",
-        tags$ul(tags$li(tags$i("Secchi Depth")," (a measure of water clarity)"),
-                tags$li(tags$i("Total Phosphorus")," (a nutrient that can trigger problematic algal blooms)"),
-                tags$li(tags$i("Total Nitrogen"), " (another such nutrient)"),
-                tags$li(tags$i("Chlorophyll")," a (a measure of algal population)"))),
-
-    div(tags$strong("How Do I Get Started?")," Complete the form on the left, then your output will appear in place of these instructions. (Entering the name of your lake in the form is optional.)"),
-
-    div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, click the “?” icon on the left."),
-
-    div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Edge using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens."),
-
-    div(HTML(paste(tags$strong("How Do I Learn More?"), " Visit the EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = "")))
-  )
+  if (window_inner_width < 1200) {
+    tagList(
+      div("This tool was produced by the National Aquatic Resource Surveys (NARS) program of the U.S. Environmental Protection Agency (EPA). The NARS program conducts large-scale studies of the quality of the nation’s waters. One such study is the National Lakes Assessment (NLA)."),
+      
+      div(tags$strong("What Can the Tool Do?"),"This tool allows you to input water quality data for a lake you care about, then see it compared to statistically representative data collected by the NLA.  You’ll view comparisons to the national, regional and state level. This is currently possible using 2012 and 2017 NLA data for any of four important and common indicators of water quality:",
+          tags$ul(tags$li(tags$i("Secchi Depth")," (a measure of water clarity)"),
+                  tags$li(tags$i("Total Phosphorus")," (a nutrient that can trigger problematic algal blooms)"),
+                  tags$li(tags$i("Total Nitrogen"), " (another such nutrient)"),
+                  tags$li(tags$i("Chlorophyll")," a (a measure of algal population)"))),
+      
+      div(tags$strong("How Do I Get Started?")," Complete the form above, then your output will appear in place of these instructions. (Entering the name of your lake in the form is optional.)"),
+      
+      div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, click the “?” icon above."),
+      
+      div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Edge using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens."),
+      
+      div(HTML(paste(tags$strong("How Do I Learn More?"), " Visit the EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = "")))
+    )   
+  }
+  else {
+    tagList(
+      div("This tool was produced by the National Aquatic Resource Surveys (NARS) program of the U.S. Environmental Protection Agency (EPA). The NARS program conducts large-scale studies of the quality of the nation’s waters. One such study is the National Lakes Assessment (NLA)."),
+      
+      div(tags$strong("What Can the Tool Do?"),"This tool allows you to input water quality data for a lake you care about, then see it compared to statistically representative data collected by the NLA.  You’ll view comparisons to the national, regional and state level. This is currently possible using 2012 and 2017 NLA data for any of four important and common indicators of water quality:",
+          tags$ul(tags$li(tags$i("Secchi Depth")," (a measure of water clarity)"),
+                  tags$li(tags$i("Total Phosphorus")," (a nutrient that can trigger problematic algal blooms)"),
+                  tags$li(tags$i("Total Nitrogen"), " (another such nutrient)"),
+                  tags$li(tags$i("Chlorophyll")," a (a measure of algal population)"))),
+      
+      div(tags$strong("How Do I Get Started?")," Complete the form on the left, then your output will appear in place of these instructions. (Entering the name of your lake in the form is optional.)"),
+      
+      div(tags$strong("How Do I Interpret Results?")," For help interpreting the results, click the “?” icon on the left."),
+      
+      div(tags$strong("What Devices Are Best?")," For best results, use this tool in Chrome or Edge using a laptop or desktop computer. It may not display properly on mobile or other devices with smaller screens."),
+      
+      div(HTML(paste(tags$strong("How Do I Learn More?"), " Visit the EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = "")))
+    ) 
+  }
 }
 
 

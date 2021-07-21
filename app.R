@@ -93,7 +93,10 @@ ui <- fixedPage(
       fixedRow(column(width = 12,
                       id = "default_message",
                       tags$div(id = "default_container",
-                               intro_text()))),
+                               uiOutput("intro_text")
+                      )
+              )
+      ),
       fixedRow(column(width = 12,
                       htmlOutput("overview_text")),
                style = "min-height: 100px;"),
@@ -126,6 +129,16 @@ server <- function(input, output,session) {
     } else {
       lake_name = input$lake_name_input
     }
+  })
+  
+  output$intro_text <- renderUI({
+    window_inner_width <- input$dimension[1]
+    
+    if (is.null(window_inner_width)) {
+      window_inner_width <- 1300
+    }
+    
+    intro_text(window_inner_width)
   })
 
   output$value_header <- renderUI({
