@@ -108,7 +108,7 @@ indicator_plot <- function(df,
 
   max_scale <- max(upper_limit, compared_value)
 
-  scale_limits <- c(0.0, max_scale * 1.025)
+  scale_limits <- c(0.0, max_scale * 1.03)
   
   lower_expansion_multiplier <- 0.04
   if (window_inner_width < 1200) {
@@ -197,7 +197,7 @@ indicator_plot <- function(df,
                        }) +
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
-          plot.margin = margin(t = 0, r = 0, b = -9, l = 0, unit = "pt"),
+          plot.margin = margin(t = 0, r = 0.5, b = -9, l = 0, unit = "pt"),
           axis.text.x = element_text(size = 10),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(color = "dimgray", fill = NA, size = 0.25),
