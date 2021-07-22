@@ -108,7 +108,7 @@ indicator_plot <- function(df,
 
   max_scale <- max(upper_limit, compared_value)
 
-  scale_limits <- c(0.0, max_scale * 1.025)
+  scale_limits <- c(0.0, max_scale * 1.03)
   
   lower_expansion_multiplier <- 0.04
   if (window_inner_width < 1200) {
@@ -143,7 +143,7 @@ indicator_plot <- function(df,
   plot <- formatted_df %>%
     ggplot(aes(x)) +
     geom_boxplot(width = .15,
-                 size = .25,
+                 size = .5,
                  outlier.shape = NA,
                  color = "dimgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
@@ -152,7 +152,7 @@ indicator_plot <- function(df,
   # Add 5Pct cap if within limits
   if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
-      size = 0.25,
+      size = 0.5,
       color = "dimgray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
       data = formatted_df_without_limits
@@ -162,7 +162,7 @@ indicator_plot <- function(df,
   # Add 95Pct cap if within limits
   if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
-      size = 0.25,
+      size = 0.5,
       color = "dimgray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
       data = formatted_df_without_limits
@@ -197,8 +197,8 @@ indicator_plot <- function(df,
                        }) +
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
-          plot.margin = margin(t = 0, r = 0, b = -9, l = 0, unit = "pt"),
-          axis.text.x = element_text(size = 7.5),
+          plot.margin = margin(t = 0, r = 0.5, b = -9, l = 0, unit = "pt"),
+          axis.text.x = element_text(size = 10),
           panel.grid.minor = element_blank(),
           panel.border = element_rect(color = "dimgray", fill = NA, size = 0.25),
           panel.grid.major = element_line(color = "dimgray", size = 0.25, linetype = "dashed"),
@@ -297,30 +297,6 @@ get_survey_timeframe <- function(nla_year) {
 # returns: a float margin of error
 margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
-  # margin_of_error <- 
-  #   df %>% 
-  #   filter(subpopulation == sub_pop,
-  #          indicator == indi) %>% 
-  #   filter(value <= comp_value) %>% 
-  #   filter(value == max(value)) %>% 
-  #   mutate(lcb = case_when(
-  #     round(value) == comp_value ~ lcb95pct_p,
-  #     round(value) < comp_value ~ lcb95pct_p,
-  #     round(value) > comp_value ~ 0.0),
-  #     ucb = case_when(
-  #       round(value) == comp_value ~ ucb95pct_p,
-  #       round(value) < comp_value ~ ucb95pct_p,
-  #       round(value) > comp_value ~ 0.0),
-  #     percentile = case_when(
-  #       value == comp_value ~ estimate_p,
-  #       value < comp_value ~ estimate_p,
-  #       value > comp_value ~ 0.0),
-  #     margin = if_else(percentile - lcb > percentile - ucb,
-  #                      percentile - lcb,
-  #                      percentile - ucb)) %>% 
-  #   pull(margin)
-  
-
   filtered_df <- 
     df %>% 
     filter(subpopulation == sub_pop,
@@ -340,7 +316,7 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   ucb_diff <- ucb - est
   lcb_diff <- est - lcb
   
-  margin_of_error <- round2(max(ucb_diff, lcb_diff), 0)
+  margin_of_error <- round2(max(ucb_diff, lcb_diff), 1)
   
   if (margin_of_error == 0) {
     return(get_non_zero_margin_of_error(df,sub_pop,indi))

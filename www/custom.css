@@ -131,11 +131,11 @@ body {
   min-height: 592px;
 }
 
-#default_container > div {
+#intro_text > div {
   margin-bottom: 13px;
 }
 
-#default_container ul {
+#intro_text ul {
   margin-top: 5px;
 }
 
