@@ -4,9 +4,9 @@ source("setup.R")
 options(bitmapType = 'cairo', device = 'png')
 
 ui <- fixedPage(
-  # This is required for the bit of javascript used on line 79
   tags$head(
     useShinyjs(),
+    # Script for calculated the browser width
     tags$script('
         var dimension = [0, 0];
         
