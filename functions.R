@@ -297,30 +297,6 @@ get_survey_timeframe <- function(nla_year) {
 # returns: a float margin of error
 margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
-  # margin_of_error <- 
-  #   df %>% 
-  #   filter(subpopulation == sub_pop,
-  #          indicator == indi) %>% 
-  #   filter(value <= comp_value) %>% 
-  #   filter(value == max(value)) %>% 
-  #   mutate(lcb = case_when(
-  #     round(value) == comp_value ~ lcb95pct_p,
-  #     round(value) < comp_value ~ lcb95pct_p,
-  #     round(value) > comp_value ~ 0.0),
-  #     ucb = case_when(
-  #       round(value) == comp_value ~ ucb95pct_p,
-  #       round(value) < comp_value ~ ucb95pct_p,
-  #       round(value) > comp_value ~ 0.0),
-  #     percentile = case_when(
-  #       value == comp_value ~ estimate_p,
-  #       value < comp_value ~ estimate_p,
-  #       value > comp_value ~ 0.0),
-  #     margin = if_else(percentile - lcb > percentile - ucb,
-  #                      percentile - lcb,
-  #                      percentile - ucb)) %>% 
-  #   pull(margin)
-  
-
   filtered_df <- 
     df %>% 
     filter(subpopulation == sub_pop,
