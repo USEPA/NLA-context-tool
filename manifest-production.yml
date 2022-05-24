@@ -1,6 +1,6 @@
 applications:
 - name: nla-lake-context-tool
-  memory: 2G
+  memory: 648M
   routes:
     - route: nla-lake-context-tool.app.cloud.gov
   disk_quota: 1G
