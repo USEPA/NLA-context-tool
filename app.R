@@ -1,6 +1,6 @@
 source("setup.R")
 
-addResourcePath(prefix = 'static', directoryPath = '~/www')
+#addResourcePath(prefix = 'static', directoryPath = '~/www')
 options(bitmapType = 'cairo', device = 'png')
 
 ui <- fixedPage(
@@ -27,8 +27,7 @@ ui <- fixedPage(
     tags$meta(name="HandheldFriendly", content="true"),
     tags$meta(name="viewport", content="width=device-width, initial-scale=1.0"),
     tags$meta(`http-equiv`="x-ua-compatible", content="ie=edge"),
-    tags$script(src = "js/pattern-lab-head-script.js"),
-    # update this line with your title:    tags$title('ContDataQC | US EPA'),
+    tags$title('Lake Comparison Tool | US EPA'),
     tags$link(rel="icon", type="image/x-icon", href="https://www.epa.gov/themes/epa_theme/images/favicon.ico"),
     tags$meta(name="msapplication-TileColor", content="#FFFFFF"),
     tags$meta(name="msapplication-TileImage", content="https://www.epa.gov/themes/epa_theme/images/favicon-144.png"),
@@ -82,11 +81,9 @@ ui <- fixedPage(
     '<div class="skiplinks" role="navigation" aria-labelledby="skip-to-main">
       <a id="skip-to-main" href="#main" class="skiplinks__link visually-hidden focusable">Skip to main content</a>
     </div>
-
     <!-- Google Tag Manager (noscript) -->
     <!--noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-L8ZB" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript-->
     <!-- End Google Tag Manager (noscript) -->
-
     <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
     <section class="usa-banner" aria-label="Official government website">
       <div class="usa-accordion">
@@ -214,6 +211,7 @@ ui <- fixedPage(
         </div>
         <article class="article">'
   ),
+  
   tags$head(
     useShinyjs(),
     # Script for calculated the browser width
@@ -241,7 +239,7 @@ ui <- fixedPage(
           }, delay);
         });
     '),
-    tags$link(rel = "stylesheet", type = "text/css", href = "static/custom.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   ),
 
   sidebarLayout(
@@ -545,7 +543,7 @@ ui <- fixedPage(
     </a>'
   )
   )
-server <- function(input, output,session) {
+server <- function(input, output, session) {
 
   options("Set-Cookie" = paste0("JSESSIONID=", session$token))
 
