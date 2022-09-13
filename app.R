@@ -1,6 +1,6 @@
 source("setup.R")
 
-#addResourcePath(prefix = 'static', directoryPath = '~/www')
+addResourcePath(prefix = 'static', directoryPath = '~/www')
 options(bitmapType = 'cairo', device = 'png')
 
 ui <- fixedPage(
