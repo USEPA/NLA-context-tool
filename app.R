@@ -263,7 +263,7 @@ ui <- fixedPage(
     # Side bar layout lives here
     sidebarPanel(
       tags$div("Instructions",class = "sidebar_header",
-               dropdownButton(tags$img(src = "static/help-tooltip.png",align = "right",
+               dropdownButton(tags$img(src = "help-tooltip.png",align = "right",
                                        height = 650,
                                        width = 1033),
                               size = "xs",
@@ -632,7 +632,7 @@ server <- function(input, output, session) {
               HTML(
                 paste("Welcome to EPA's Lake Comparison", HTML('&nbsp;'), "Tool", sep="")
               ),
-              tags$img(src = "static/epa_logo.png",
+              tags$img(src = "epa_logo.png",
                        align = "right",
                        width = 73,
                        height = 24,
