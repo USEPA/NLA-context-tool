@@ -7,6 +7,11 @@ body {
   float: right;
 }
 
+.tip {
+  width: 1033px;
+  height: 650px;
+}
+
 #dropdown-menu-help_button {
   left: -250px;
 }
