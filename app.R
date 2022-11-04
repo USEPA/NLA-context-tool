@@ -262,10 +262,13 @@ ui <- fixedPage(
   sidebarLayout(
     # Side bar layout lives here
     sidebarPanel(
-      tags$div("Instructions",class = "sidebar_header",
-               dropdownButton(tags$img(src = "help-tooltip.png",align = "right",
-                                       height = 650,
-                                       width = 1033),
+      tags$div("Instructions",
+               class = "sidebar_header",
+               dropdownButton(
+                 tags$div(
+                          class = "tip",
+                 tags$img(src = "help-tooltip.png", 
+                          align = "right")),
                               size = "xs",
                               inputId = "help_button",
                               tooltip = "Help",
