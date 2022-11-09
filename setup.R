@@ -13,7 +13,7 @@ library(magrittr)
 library(ggpubr)
 library(grid)
 library(shinyWidgets)
-library(shinycssloaders)
+
 
 # Load the shared functions
 source("functions.R")
