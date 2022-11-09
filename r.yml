@@ -8,3 +8,4 @@ packages:
     - name: ggpubr
     - name: shinyWidgets
     - name: patchwork
+    - name: shinycssloaders
