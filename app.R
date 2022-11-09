@@ -326,7 +326,7 @@ ui <- fixedPage(
               )
       ),
       fixedRow(column(width = 12,
-                      htmlOutput("overview_text")),
+                      htmlOutput("overview_text") %>% withSpinner(color="#0275d8")),
                style = "min-height: 100px;"),
       fixedRow(column(width = 12,
                       htmlOutput("state_header"))),
