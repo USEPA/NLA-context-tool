@@ -29,4 +29,4 @@ if(dir.exists(lib_dir))
 }
 
 library(shiny)
-runApp(host="0.0.0.0", port=strtoi(Sys.getenv("PORT")))
+runApp(appDir="shiny-app", host="0.0.0.0", port=strtoi(Sys.getenv("PORT")))
