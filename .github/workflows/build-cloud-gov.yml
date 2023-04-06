@@ -23,17 +23,19 @@ jobs:
     - name: Delete shiny-app folder if it exists
       run: |
         if [ -d "shiny-app" ]; then rm -fr shiny-app; fi
+        if [ -d "main-branch" ]; then rm -fr main-branch; fi
 
     - name: Checkout default branch to shiny-app folder
       uses: actions/checkout@v3
       with:
         fetch-depth: 1
-        path: shiny-app
+        path: main-branch
 
     - name: Commit & Push
       if: ${{ success() }}
       run: |
-        git config --global --add safe.directory $(realpath .)
+        mkdir shiny-app
+        mv main-branch/* shiny-app
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add shiny-app
