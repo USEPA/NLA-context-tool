@@ -32,10 +32,11 @@ jobs:
 
     - name: Commit & Push
       if: ${{ success() }}
+      run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add vendor_r
-        git commit -m "Automated workflow from GitHub Actions to vendor R dependencies"
+        git commit -m "Automated workflow from GitHub Actions to copy R Shiny app from default branch"
         git push
 
   download_and_vendor_dependencies:
