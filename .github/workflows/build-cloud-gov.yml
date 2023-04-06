@@ -17,7 +17,7 @@ jobs:
     steps:
     - name: Check BUILD_DEPS value
       run: |
-        echo "Should this run build dependencies: $BUILD_DEPS"
+        echo "Should this run build dependencies: $env.BUILD_DEPS"
       env:
         BUILD_DEPS: ${{ inputs.build_deps }}
 
@@ -51,7 +51,7 @@ jobs:
         git push
 
   download_and_vendor_dependencies:
-    if: ${{ inputs.build_deps == 'true' }}
+    if: ${{ inputs.build_deps }}
     needs: copy_code_to_cloud-gov
     runs-on: ubuntu-latest
     name: Compile and vendor R dependencies for cloud.gov
