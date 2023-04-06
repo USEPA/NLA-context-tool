@@ -1,0 +1,12 @@
+name: NLA_Compare_My_Lake_test
+title: NLA_Compare_My_Lake_test
+username:
+account: crowinsight
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 936392
+bundleId: 2093480
+url: https://crowinsight.shinyapps.io/NLA_Compare_My_Lake_test/
+when: 1558182515.18333
+asMultiple: FALSE
+asStatic: FALSE
