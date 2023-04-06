@@ -15,6 +15,12 @@ jobs:
     name: Copy default branch code to shiny-app folder within cloud-gov branch
 
     steps:
+    - name: Check BUILD_DEPS value
+      run: |
+        echo "Should this run build dependencies: $BUILD_DEPS"
+      env:
+        BUILD_DEPS: ${{ inputs.build_deps }}
+
     - name: Checkout Code
       uses: actions/checkout@v3
       with:
