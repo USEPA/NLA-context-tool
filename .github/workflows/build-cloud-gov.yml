@@ -15,12 +15,6 @@ jobs:
     name: Copy default branch code to shiny-app folder within cloud-gov branch
 
     steps:
-    - name: Check BUILD_DEPS value
-      run: |
-        echo "Should this run build dependencies: $env.BUILD_DEPS"
-      env:
-        BUILD_DEPS: ${{ inputs.build_deps }}
-
     - name: Checkout Code
       uses: actions/checkout@v3
       with:
@@ -43,12 +37,13 @@ jobs:
       run: |
         mkdir shiny-app
         find main-branch/* -maxdepth 1 ! -name ".git*" -print0 | xargs -0 cp -r -t shiny-app
-        ls -aR shiny-app
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add shiny-app
         git diff-index --quiet HEAD || git commit -m "Automated workflow from GitHub Actions to copy R Shiny app from default branch"
         git push
+      env:
+        BUILD_DEPS: ${{ inputs.build_deps }}
 
   download_and_vendor_dependencies:
     if: ${{ inputs.build_deps }}
@@ -72,6 +67,7 @@ jobs:
 
     - name: Setup Git and remove problematic packages
       run: |
+        git config --global --add safe.directory $(realpath .)
         git config user.name github-actions
         git config user.email github-actions@github.com
         sudo apt --purge autoremove -y libmariadb-dev libmariadb-dev-compat
