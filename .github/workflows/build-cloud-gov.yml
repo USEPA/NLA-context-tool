@@ -21,7 +21,7 @@ jobs:
         fetch-depth: 1
         ref: cloud-gov
 
-    - name: Delete shiny-app and main-branch folders if they exists
+    - name: Delete shiny-app and main-branch folders if they exist
       run: |
         if [ -d "shiny-app" ]; then rm -fr shiny-app; fi
         if [ -d "main-branch" ]; then rm -fr main-branch; fi
@@ -32,7 +32,7 @@ jobs:
         fetch-depth: 1
         path: main-branch
 
-    - name: Commit & Push
+    - name: Copy everything but .git*, Commit, and Push
       if: ${{ success() }}
       run: |
         mkdir shiny-app
@@ -80,7 +80,7 @@ jobs:
     - name: Setup pandoc
       uses: r-lib/actions/setup-pandoc@v2
 
-    - name: Download dependencies
+    - name: Install R dependencies
       uses: r-lib/actions/setup-r-dependencies@v2
       with:
         packages: |
@@ -147,5 +147,5 @@ jobs:
       if: ${{ success() }}
       run: |
         git add vendor_r
-        git commit -m "Automated workflow from GitHub Actions to vendor R dependencies"
+        git diff-index --quiet HEAD || git commit -m "Automated workflow from GitHub Actions to vendor R dependencies"
         git push
