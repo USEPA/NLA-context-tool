@@ -13,6 +13,7 @@ jobs:
   copy_code_to_cloud-gov:
     runs-on: ubuntu-latest
     name: Copy default branch code to shiny-app folder within cloud-gov branch
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -35,7 +36,7 @@ jobs:
       if: ${{ success() }}
       run: |
         mkdir shiny-app
-        find main-branch/* ! -name ".git*" -print0 | xargs -0 mv -v -t shiny-app
+        find main-branch/* ! -name ".git*" -print0 | xargs -0 cp -t shiny-app
         ls -aR shiny-app
         git config user.name github-actions
         git config user.email github-actions@github.com
