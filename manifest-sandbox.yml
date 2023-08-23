@@ -1,0 +1,9 @@
+applications:
+- name: nla-lake-context-tool-sandbox
+  memory: 500M
+  routes:
+    - route: nla-lake-context-tool-sandbox.app.cloud.gov
+  disk_quota: 1G
+  buildpacks:
+     - r_buildpack
+  command: R -f shiny.R
