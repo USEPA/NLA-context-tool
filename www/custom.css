@@ -1,24 +1,20 @@
 body {
   font-family: Arial,Helvetica Neue,Helvetica,'Open Sans',sans-serif; 
-  font-size: 18px;
+/*  font-size: 18px; */
 }
 
 #help_button_state {
   float: right;
 }
 
-.tip {
-  width: 1033px;
-  height: 650px;
-}
-
 #dropdown-menu-help_button {
   left: -250px;
 }
+
 .selectize-input {
-  height: 30px;
+  height: 25px;
   min-height: 25px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .main_header {
     background-color: #0097DC;
@@ -51,6 +47,7 @@ body {
 .region_title {
   font-size: 18px;
 }
+
 #region_map_img {
     display: block;
     margin-left: auto;
@@ -162,7 +159,7 @@ input[type=number]::-webkit-outer-spin-button {
 #flex-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 #year_collected_wrapper {
@@ -183,8 +180,13 @@ input[type=number]::-webkit-outer-spin-button {
   line-height: 15px;
 }
 
+.tip {
+  width: 1033px;
+  height: 650px;
+}
+
 #year_selector_wrapper .selectize-control {
-  margin-bottom: -6.6px;
+  margin-bottom: -6.6px; 
 }
 
 a:link { color: #005da4; }

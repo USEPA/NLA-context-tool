@@ -1,4 +1,6 @@
 
+fPaste <- function(vec) sub(",\\s+([^,]+)$", " and \\1.", toString(vec))
+
 # For generating the x-axis ticks
 base_breaks <- function(n = 20){
   function(x) {
@@ -38,52 +40,48 @@ getStat <- function(df, stat) {
 #
 # returns: the maximum value for that indicator across state, epa region, and allsites values
 
-getScaleMax <- function(sub_pop, indi) {
+getScaleMax <- function(df, sub_pop, indi) {
   
-  epa_region_row <- region_lookup_table %>%
-    filter(state_abbr == sub_pop)
+  ecoregion <- ecoregion_lookup_table %>%
+    filter(state_abbr == sub_pop) %>%
+    pull(ecoregion_name) %>% unique()
   
-  epa_region <- epa_region_row[1, "epa_region"] %>% toString()
-  
-  subpop_max <- indicators %>%
+  subpop_max <- df %>%
     filter(indicator == indi) %>%
     filter(subpopulation == sub_pop) %>%
     filter(statistic == "95Pct") %>%
     pull(estimate) %>% 
     max()
   
-  region_max <- indicators %>%
+  region_max <- df %>%
     filter(indicator == indi) %>%
-    filter(subpopulation == epa_region) %>%
+    filter(subpopulation %in% ecoregion) %>%
     filter(statistic == "95Pct") %>%
     pull(estimate) %>% 
     max()
   
-  allsites_max <- indicators %>%
+  allsites_max <- df %>%
     filter(indicator == indi) %>%
-    filter(subpopulation == "All_Sites") %>%
+    filter(subpopulation == "All Sites") %>%
     filter(statistic == "95Pct") %>%
     pull(estimate) %>% 
     max()
   
   indicator_state_allsites_max <- max(subpop_max, region_max, allsites_max)
   
-  if (indi == "PTL" && epa_region == "Region_9") {
-    indicator_state_allsites_max <- min(1000, indicator_state_allsites_max)
+  if(indi == "PTL") {
+    indicator_state_allsites_max <- min(500, indicator_state_allsites_max)
   }
-  else if (indi == "CHL" && epa_region == "Region_9") {
-    indicator_state_allsites_max <- min(300, indicator_state_allsites_max)
+  if(indi == "CHLA") {
+    indicator_state_allsites_max <- min(200, indicator_state_allsites_max)
   }
-  else if (indi == "CHL" && epa_region == "Region_8") {
-    indicator_state_allsites_max <- min(307, indicator_state_allsites_max)
+  if(indi == "CHLORIDE") {
+      indicator_state_allsites_max <- min(200, indicator_state_allsites_max)
   }
-  else if (indi == "NTL" && epa_region == "Region_9") {
-    indicator_state_allsites_max <- min(5000, indicator_state_allsites_max)
+  if(indi == "TURB") {
+    indicator_state_allsites_max <- min(100, indicator_state_allsites_max)
   }
-  else if (indi == "NTL" && epa_region == "Region_7") {
-    indicator_state_allsites_max <- min(6000, indicator_state_allsites_max)
-  }
-  
+
   return(indicator_state_allsites_max)
 }
 
@@ -105,22 +103,28 @@ indicator_plot <- function(df,
                            upper_limit,
                            window_inner_width = 1300) {
   
-
+  
   max_scale <- max(upper_limit, compared_value)
-
-  scale_limits <- c(0.0, max_scale * 1.03)
+  min_scale <- min(5, compared_value)
+  
+  if(indi=="PH"){
+    scale_limits <- c(min_scale/1.03, max_scale * 1.03)
+  } else{
+    scale_limits <- c(0.0, max_scale * 1.03)
+  }
   
   lower_expansion_multiplier <- 0.04
   if (window_inner_width < 1200) {
     lower_expansion_multiplier <- 0.08
   }
-
+  
   # Generates the box plot for displaying in the site
   
   df <- df %>% 
     filter(subpopulation == sub_pop,
-           indicator == indi,
            statistic %in% bp_stats)
+  
+  
   
   formatted_df <- data.frame(
     x = 0,
@@ -143,7 +147,7 @@ indicator_plot <- function(df,
   plot <- formatted_df %>%
     ggplot(aes(x)) +
     geom_boxplot(width = .15,
-                 size = .5,
+                 lwd = .5,
                  outlier.shape = NA,
                  color = "dimgray",
                  mapping = aes(ymin = y5, lower = y25, middle = y50, upper = y75, ymax = y95),
@@ -152,7 +156,7 @@ indicator_plot <- function(df,
   # Add 5Pct cap if within limits
   if (getStat(df, "5Pct") >= scale_limits[1]) {
     plot <- plot + geom_segment(
-      size = 0.5,
+      linewidth = 0.5,
       color = "dimgray",
       aes(x = -.05, y = y5, xend = .05, yend = y5),
       data = formatted_df_without_limits
@@ -162,7 +166,7 @@ indicator_plot <- function(df,
   # Add 95Pct cap if within limits
   if (getStat(df, "95Pct") <= scale_limits[2]) {
     plot <- plot + geom_segment(
-      size = 0.5,
+      linewidth = 0.5,
       color = "dimgray",
       aes(x = -.05, y = y95, xend = .05, yend = y95),
       data = formatted_df_without_limits
@@ -172,43 +176,43 @@ indicator_plot <- function(df,
   plot <- plot + theme_minimal() +
     # Places the measurement on the plot
     geom_hline(yintercept = compared_value,
-               size = 2,
+               linewidth = 2,
                color = "#005DA9",
                alpha = 0.90) +
     scale_x_continuous(breaks = NULL,
                        limits = c(-.11,.11)) +
     scale_y_continuous(
-                       breaks = axisTicks(c(0.0, max_scale), FALSE, NULL, 6),
-                       limits = scale_limits,
-                       expand = expansion(mult = c(lower_expansion_multiplier, 0)),
-                       oob = oob_keep,
-                       labels = function(x) {
-                         # This function generates and formats the label
-                         formatted_labels <-
-                           comma_format(big.mark = ",",
-                                        decimal.mark = ".",
-                                        accuracy = .1)(x)
-
-                         # this appends the measurement unit to the first label on
-                         # the x-axis
-                         formatted_labels[1] <- paste(formatted_labels[1],
-                                                      measure_unit)
-                         formatted_labels
-                       }) +
+      breaks = axisTicks(c(0.0, max_scale), FALSE, NULL, 6),
+      limits = scale_limits,
+      expand = expansion(mult = c(lower_expansion_multiplier, 0)),
+      oob = oob_keep,
+      labels = function(x) {
+        # This function generates and formats the label
+        formatted_labels <-
+          comma_format(big.mark = ",",
+                       decimal.mark = ".",
+                       accuracy = .1)(x)
+        
+        # this appends the measurement unit to the first label on
+        # the x-axis
+        formatted_labels[1] <- paste(formatted_labels[1],
+                                     measure_unit)
+        formatted_labels
+      }) +
     theme(axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           plot.margin = margin(t = 0, r = 0.5, b = -9, l = 0, unit = "pt"),
           axis.text.x = element_text(size = 10),
           panel.grid.minor = element_blank(),
-          panel.border = element_rect(color = "dimgray", fill = NA, size = 0.25),
-          panel.grid.major = element_line(color = "dimgray", size = 0.25, linetype = "dashed"),
+          panel.border = element_rect(color = "dimgray", fill = NA, linewidth = 0.25),
+          panel.grid.major = element_line(color = "dimgray", linewidth = 0.25, linetype = "dashed"),
           plot.background = element_rect(
             fill = NA,
             colour = "white",
-            size = 1
+            linewidth = 1
           )) +
     coord_flip() +
-    labs(y = "")
+    labs(y = "") 
   
   return(plot)
 }
@@ -226,8 +230,7 @@ indicator_plot <- function(df,
 percentile_value <- function(df,sub_pop,indi,comp_value) {
   filtered_df <- 
     df %>% 
-    filter(subpopulation == sub_pop,
-           indicator == indi)
+    filter(subpopulation == sub_pop)
   
   # this finds the the upper threshold of the indicator's
   # estimates
@@ -235,7 +238,6 @@ percentile_value <- function(df,sub_pop,indi,comp_value) {
     df %>% 
     select(subpopulation,indicator,value,estimate_p) %>% 
     filter(subpopulation == sub_pop,
-           indicator == indi,
            estimate_p == 100) %>% 
     pull(value) %>%
     min()
@@ -260,8 +262,7 @@ percentile_value <- function(df,sub_pop,indi,comp_value) {
 # indi: the indicator to filter by. 
 indicator_max <- function(df,sub_pop,indi) {
   df %>% 
-    filter(subpopulation == sub_pop,
-           indicator == indi)  %>%
+    filter(subpopulation == sub_pop)  %>%
     pull(value)  %>% 
     max()
 }
@@ -270,7 +271,6 @@ indicator_max <- function(df,sub_pop,indi) {
 indicator_min <- function(df,sub_pop,indi) {
   df %>% 
     filter(subpopulation == sub_pop,
-           indicator == indi,
            n_resp > 0)  %>%
     pull(value)  %>% 
     min()
@@ -299,8 +299,7 @@ margin_calculator <- function(df,sub_pop,indi,comp_value) {
   
   filtered_df <- 
     df %>% 
-    filter(subpopulation == sub_pop,
-           indicator == indi) %>% 
+    filter(subpopulation == sub_pop) %>% 
     filter(value <= comp_value)
   
   if (nrow(filtered_df) == 0) {
@@ -329,8 +328,7 @@ get_non_zero_margin_of_error <- function(df, sub_pop, indi) {
   
   moe <- 
     df %>% 
-    filter(subpopulation == sub_pop,
-           indicator == indi) %>% 
+    filter(subpopulation == sub_pop) %>% 
     mutate(moe = ifelse(ucb95pct_p - estimate_p > estimate_p - lcb95pct_p, ucb95pct_p - estimate_p, estimate_p - lcb95pct_p)) %>% 
     filter(moe > 0) %>%
     pull(moe) %>%
@@ -348,17 +346,17 @@ get_non_zero_margin_of_error <- function(df, sub_pop, indi) {
 # area_name: The EPA region
 #
 # returns: A text string of the header
-generate_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year) {
+generate_header <- function(df,sub_pop,indicator,value,lake_name,area_name) {
   
-  max_indi_val <- indicator_max(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
-  min_indi_val <- indicator_min(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
+  max_indi_val <- indicator_max(df,sub_pop,indicator)
+  min_indi_val <- indicator_min(df,sub_pop,indicator)
   
   if (value > max_indi_val) {
     pct_value <- "'s value is above the highest NLA result."
   } else if (value < min_indi_val) {
     pct_value <- "'s value is at or below the lowest NLA result."
   } else {
-    pct_num <- ordinal_format()(percentile_value(dplyr::filter(estimates, year == nla_year),sub_pop,indicator,value))
+    pct_num <- ordinal_format()(percentile_value(df,sub_pop,indicator,value))
     pct_value <- glue(" is in the {pct_num} percentile.")
   }
   
@@ -367,7 +365,7 @@ generate_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year
   } else {
     glue("In {area_name}, {lake_name}{pct_value}")
   }
-
+  
   
 }
 
@@ -379,19 +377,19 @@ generate_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year
 # area_name: The EPA region
 #
 # returns: A text string of the header
-generate_html_header <- function(sub_pop,indicator,value,lake_name,area_name,nla_year) {
+generate_html_header <- function(df, sub_pop,indicator,value,lake_name,area_name) {
   
   # HTML(paste(tags$strong("How Do I Learn More?"), " Visit the EPA's ", tags$a(href = "https://www.epa.gov/national-aquatic-resource-surveys/nla", target="_blank", "NLA website"), ".", sep = ""))
   
-  max_indi_val <- indicator_max(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
-  min_indi_val <- indicator_min(dplyr::filter(estimates, year == nla_year),sub_pop,indicator)
+  max_indi_val <- indicator_max(df,sub_pop,indicator)
+  min_indi_val <- indicator_min(df,sub_pop,indicator)
   
   if (value > max_indi_val) {
     pct_value <- HTML(paste("'s value is above the highest NLA", HTML("&nbsp;"), "result.", sep=""))
   } else if (value < min_indi_val) {
     pct_value <- HTML(paste("'s value is at or below the lowest NLA", HTML("&nbsp;"), "result.", sep=""))
   } else {
-    pct_num <- ordinal_format()(percentile_value(dplyr::filter(estimates, year == nla_year),sub_pop,indicator,value))
+    pct_num <- ordinal_format()(percentile_value(df,sub_pop,indicator,value))
     pct_value <- HTML(paste(" is in the ", pct_num, HTML("&nbsp"), "percentile.", sep=""))
   }
   
@@ -408,32 +406,32 @@ generate_html_header <- function(sub_pop,indicator,value,lake_name,area_name,nla
 
 # Creates a section title for exported PNG.
 # Arguments:
-# text: The text for the seciton
+# text: The text for the section
 # text_color: Hex color for the text color
 # background_color: Hex color for the background color
 # size: the size of the text
 # 
 # returns: a graphics object for the section.
-section_title <- function(text,text_color,background_color,size) {
-  grobTree(rectGrob(gp = gpar(fill = background_color,col = NA)),
-           textGrob(text, x = 0.5, hjust = 0.5,
-                    gp = gpar(col = text_color, cex = size,fontface = "bold"))) %>% as_ggplot()
-}
-
-# A small filler object for the vertical alignment of the exported PNG
-filler <- rectGrob(gp = gpar(fill = "#FFFFFF",col = NA)) %>% as_ggplot()
-
-# A function to create a small 'invalid' that is used when the user hasn't
-# entered required values on the left hand side of the web-page.
-invalid_image_file <- function() {
-  invalid_title <- section_title("RESULTS EXPORT FAILED.","white","#0097DC",1)
-  
-  invalid_title +
-    filler +
-    text_grob("Please provide required inputs before exporting results image.") +
-    filler +
-    plot_layout(ncol = 1, heights = c(.1,.1,.1,1))
-}
+# section_title <- function(text,text_color,background_color,size) {
+#   grobTree(rectGrob(gp = gpar(fill = background_color,col = NA)),
+#            textGrob(text, x = 0.5, hjust = 0.5,
+#                     gp = gpar(col = text_color, cex = size,fontface = "bold"))) %>% as_ggplot()
+# }
+# 
+# # A small filler object for the vertical alignment of the exported PNG
+# filler <- rectGrob(gp = gpar(fill = "#FFFFFF",col = NA)) %>% as_ggplot()
+# 
+# # A function to create a small 'invalid' that is used when the user hasn't
+# # entered required values on the left hand side of the web-page.
+# invalid_image_file <- function() {
+#   invalid_title <- section_title("RESULTS EXPORT FAILED.","white","#0097DC",1)
+#   
+#   invalid_title +
+#     filler +
+#     text_grob("Please provide required inputs before exporting results image.") +
+#     filler +
+#     plot_layout(ncol = 1, heights = c(.1,.1,.1,1))
+# }
 
 # Formats capitalization of the measurement unit
 # Arguments
@@ -447,7 +445,7 @@ format_measure_unit <- function(measure_unit) {
     return("METERS")
   }
   
-
+  
 }
 
 # Generates a PNG for the user to download
@@ -462,89 +460,89 @@ format_measure_unit <- function(measure_unit) {
 # name: The state name to use
 # session_url: The URL where the app is hosted
 # margin_of_error: The margin of error
-png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name = "your lake", 
-                         year = 2018, indi_text = "NA", name = "Alabama",
-                         session_url = "", margin_of_error, nla_year = 2012, survey_timeframe = 'June to September') {
-  
-  # Looks up the english version of the indicator name
-  indi_english <- indicator_english[indi]
-  
-  # Bottom lake name is used for the arguments text at the bottom
-  if (lake_name == "Your Lake") {
-    bottom_lake_name <- "[None Provided]"
-  } else {
-    bottom_lake_name <- lake_name
-  }
-  
-  # This is so if the lake name is blank in the title it'll be 'Your Lake'
-  # but in the body it'll be 'your lake'
-  if (lake_name == "your lake") {
-    title_lake_name <- "Your Lake"
-  } else {
-    title_lake_name <- lake_name
-  }
-  
-  # The summary paragraph at the top of the image
-  top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in {nla_year}. {indi_text}"
-  
-  bottom_text <- "*IMPORTANT: These population estimates are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Percentiles are rounded to the nearest whole number. Estimated max. margin of error for {state_abbr} percentile ranking, based upon limited observations: ±{margin_of_error}."
-  
-  values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
-
-  url_text <- "Image exported from {session_url} on {date()}"
-  
-  # Looks up the region name
-  area_name <- 
-    region_lookup_table %>% 
-    filter(state_name == name) %>% 
-    pull(region_name)
-  
-  # looks up the EPA region
-  epa_region <- 
-    region_lookup_table %>% 
-    filter(state_name == name) %>% 
-    pull(epa_region)
-  
-  state_abbr <- state_abbrs[name][[1]]
-  name_length <- nchar(lake_name)
-  length_ratio <- min(lake_name_limit/name_length,1)
-
-  # Generate Title Sections
-  header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
-  local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.375 * length_ratio)
-  local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.375 * length_ratio)
-  national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
-  national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.375 * length_ratio)
-  
-  # Plot sizing config.
-  plot_height <- .95
-  header_height <- 0.705882353
-  top_paragraph <- 1.4
-  
-  header_title +
-    filler +
-    ggparagraph(glue(top_text), family = "Arial", size = 15, lineheight = 1.1, color = "black") +
-    filler +
-    local_title + filler + local + 
-    regional_title + filler + regional +
-    national_title + filler  + national +
-    filler +
-    ggparagraph(glue(bottom_text), family = "Arial", size = 12.5, color = "black") +
-    ggparagraph(glue(values_text), family = "Arial", size = 12.5, color = "black") +
-    ggparagraph(glue(url_text), family = "Arial", size = 12.5, color = "black") +
-    plot_layout(ncol = 1, heights = c(header_height,
-                                      .21,
-                                      top_paragraph,.2,
-                                      header_height, .1, plot_height,
-                                      header_height, .1, plot_height,
-                                      header_height, .1, plot_height,
-                                      0.2,
-                                      1.8,
-                                      1.2,
-                                      .5))
-}
+# png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name = "your lake", 
+#                          year = 2018, indi_text = "NA", name = "Alabama",
+#                          session_url = "", margin_of_error, nla_year = 2012, survey_timeframe = 'June to September') {
+#   
+#   # Looks up the english version of the indicator name
+#   indi_english <- indicator_english[indi]
+#   
+#   # Bottom lake name is used for the arguments text at the bottom
+#   if (lake_name == "Your Lake") {
+#     bottom_lake_name <- "[None Provided]"
+#   } else {
+#     bottom_lake_name <- lake_name
+#   }
+#   
+#   # This is so if the lake name is blank in the title it'll be 'Your Lake'
+#   # but in the body it'll be 'your lake'
+#   if (lake_name == "your lake") {
+#     title_lake_name <- "Your Lake"
+#   } else {
+#     title_lake_name <- lake_name
+#   }
+#   
+#   # The summary paragraph at the top of the image
+#   top_text <- "You reported that {lake_name} in {name} ({state_abbr}) had an observed value of {comma_format(accuracy = 0.1)(round2(compared_value,2))} {measure_unit} for {indi_english} in {year}. The graphs below show how your lake ranks at the state, regional and national levels compared to representative data collected by the U.S. National Lakes Assessment in {nla_year}. {indi_text}"
+#   
+#   bottom_text <- "*IMPORTANT: These population estimates are based on a weighted analysis of lake data from the U.S. EPA’s {nla_year} U.S. National Lakes Assessment (NLA). {indi_english} was measured once at an open water location from {survey_timeframe} {nla_year}. Sampled lakes were selected using a statistically representative approach that balances lake size with their distribution across the continental U.S. Results shown are weighted based on those factors. Percentiles are rounded to the nearest whole number. Estimated max. margin of error for {state_abbr} percentile ranking, based upon limited observations: ±{margin_of_error}."
+#   
+#   values_text <- "Box-and-whisker plots above use the 5th and 95th percentile as the whisker endpoints. Plots are based on the following user inputs: INDICATOR: {indi_english}; OBSERVED DATA IN {format_measure_unit(measure_unit)}: {comma_format(accuracy = 0.1)(compared_value)}; YEAR DATA COLLECTED: {year}; LAKE NAME: {bottom_lake_name}; STATE NAME: {name}."
+#   
+#   url_text <- "Image exported from {session_url} on {date()}"
+#   
+#   # Looks up the region name
+#   # area_name <- 
+#   #   region_lookup_table %>% 
+#   #   filter(state_name == name) %>% 
+#   #   pull(region_name)
+#   # 
+#   # # looks up the EPA region
+#   # epa_region <- 
+#   #   region_lookup_table %>% 
+#   #   filter(state_name == name) %>% 
+#   #   pull(epa_region)
+#   
+#   state_abbr <- state_abbrs[name][[1]]
+#   name_length <- nchar(lake_name)
+#   length_ratio <- min(lake_name_limit/name_length,1)
+#   
+#   # Generate Title Sections
+#   header_title <- section_title(glue(title_text),"white","#0097DC",1.7 * length_ratio)
+#   local_title <- section_title(paste0(generate_header(sub_pop,indi,compared_value,lake_name,state_abbr,nla_year),"*"),"white","#005DA9",1.375 * length_ratio)
+#   local <- indicator_plot(df,sub_pop,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
+# #  regional <- indicator_plot(df,epa_region,indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
+#  # regional_title <- section_title(paste0(generate_header(epa_region,indi,compared_value,lake_name,area_name,nla_year),"*"),"white","#005DA9",1.375 * length_ratio)
+#   national <- indicator_plot(df,"All_Sites",indi,measure_unit,compared_value, getScaleMax(sub_pop, indi))
+#   national_title <- section_title(paste0(generate_header("All_Sites",indi,compared_value,lake_name,"Nationally",nla_year),"*"),"white","#005DA9",1.375 * length_ratio)
+#   
+#   # Plot sizing config.
+#   plot_height <- .95
+#   header_height <- 0.705882353
+#   top_paragraph <- 1.4
+#   
+#   header_title +
+#     filler +
+#     ggparagraph(glue(top_text), family = "Arial", size = 15, lineheight = 1.1, color = "black") +
+#     filler +
+#     local_title + filler + local + 
+#    # regional_title + filler + regional +
+#    # national_title + filler  + national +
+#     filler +
+#     ggparagraph(glue(bottom_text), family = "Arial", size = 12.5, color = "black") +
+#     ggparagraph(glue(values_text), family = "Arial", size = 12.5, color = "black") +
+#     ggparagraph(glue(url_text), family = "Arial", size = 12.5, color = "black") +
+#     plot_layout(ncol = 1, heights = c(header_height,
+#                                       .21,
+#                                       top_paragraph,.2,
+#                                       header_height, .1, plot_height,
+#                                       header_height, .1, plot_height,
+#                                       header_height, .1, plot_height,
+#                                       0.2,
+#                                       1.8,
+#                                       1.2,
+#                                       .5))
+# }
 
 # Uncomment this after sourcing setup.R to be able to test changes to
 # the png_creator function.
@@ -561,3 +559,4 @@ png_creator <-  function(df,sub_pop,indi,measure_unit,compared_value,lake_name =
 #                         margin_of_error = 0.44),
 #        width = 10.4,height = 9.69)
 # 
+

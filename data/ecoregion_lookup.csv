@@ -1,0 +1,105 @@
+state_name,state_abbr,ecoregion_name,ecoregion_abbr
+Alabama,AL,Southern Appalachians,SAP
+Alabama,AL,Coastal Plains,CPL
+Arkansas,AR,Southern Appalachians,SAP
+Arkansas,AR,Coastal Plains,CPL
+Arizona,AZ,Western Mountains,WMT
+Arizona,AZ,Xeric,XER
+California,CA,Western Mountains,WMT
+California,CA,Xeric,XER
+Colorado,CO,Southern Plains,SPL
+Colorado,CO,Western Mountains,WMT
+Colorado,CO,Xeric,XER
+Connecticut,CT,Northern Appalachians,NAP
+Delaware,DE,Coastal Plains,CPL
+Delaware,DE,Southern Appalachians,SAP
+Florida,FL,Coastal Plains,CPL
+Georgia,GA,Southern Appalachians,SAP
+Georgia,GA,Coastal Plains,CPL
+Iowa,IA,Temperate Plains,TPL
+Iowa,IA,Upper Midwest,UMW
+Idaho,ID,Western Mountains,WMT
+Idaho,ID,Xeric,XER
+Illinois,IL,Temperate Plains,TPL
+Illinois,IL,Southern Appalachians,SAP
+Illinois,IL,Upper Midwest,UMW
+Indiana,IN,Southern Appalachians,SAP
+Indiana,IN,Upper Midwest,UMW
+Indiana,IN,Temperate Plains,TPL
+Kansas,KS,Southern Plains,SPL
+Kansas,KS,Temperate Plains,TPL
+Kentucky,KY,Coastal Plains,CPL
+Kentucky,KY,Southern Appalachians,SAP
+Kentucky,KY,Temperate Plains,TPL
+Louisiana,LA,Coastal Plains,CPL
+Massachusetts,MA,Northern Appalachians,NAP
+Massachusetts,MA,Coastal Plains,CPL
+Maryland,MD,Southern Appalachians,SAP
+Maryland,MD,Coastal Plains,CPL
+Maine,ME,Northern Appalachians,NAP
+Michigan,MI,Upper Midwest,UMW
+Michigan,MI,Temperate Plains,TPL
+Minnesota,MN,Upper Midwest,UMW
+Minnesota,MN,Temperate Plains,TPL
+Missouri,MO,Temperate Plains,TPL
+Missouri,MO,Southern Appalachians,SAP
+Missouri,MO,Coastal Plains,CPL
+Mississippi,MS,Coastal Plains,CPL
+Montana,MT,Western Mountains,WMT
+Montana,MT,Northern Plains,NPL
+North Carolina,NC,Southern Appalachians,SAP
+North Carolina,NC,Coastal Plains,CPL
+North Dakota,ND,Temperate Plains,TPL
+North Dakota,ND,Northern Plains,NPL
+Nebraska,NE,Temperate Plains,TPL
+Nebraska,NE,Southern Plains,SPL
+Nebraska,NE,Northern Plains,NPL
+New Hampshire,NH,Northern Appalachians,NAP
+New Jersey,NJ,Southern Appalachians,SAP
+New Jersey,NJ,Coastal Plains,CPL
+New Jersey,NJ,Northern Appalachians,NAP
+New Mexico,NM,Western Mountains,WMT
+New Mexico,NM,Xeric,XER
+New Mexico,NM,Southern Plains,SPL
+Nevada,NV,Xeric,XER
+Nevada,NV,Western Mountains,WMT
+New York,NY,Northern Appalachians,NAP
+New York,NY,Southern Appalachians,SAP
+New York,NY,Coastal Plains,CPL
+Ohio,OH,Temperate Plains,TPL
+Ohio,OH,Southern Appalachians,SAP
+Ohio,OH,Northern Appalachians,NAP
+Oklahoma,OK,Southern Plains,SPL
+Oklahoma,OK,Southern Appalachians,SAP
+Oklahoma,OK,Temperate Plains,TPL
+Oklahoma,OK,Coastal Plains,CPL
+Oregon,OR,Western Mountains,WMT
+Oregon,OR,Xeric,XER
+Pennsylvania,PA,Northern Appalachians,NAP
+Pennsylvania,PA,Southern Appalachians,SAP
+Rhode Island,RI,Northern Appalachians,NAP
+Rhode Island,RI,Coastal Plains,CPL
+South Carolina,SC,Coastal Plains,CPL
+South Carolina,SC,Southern Appalachians,SAP
+South Dakota,SD,Temperate Plains,TPL
+South Dakota,SD,Northern Plains,NPL
+South Dakota,SD,Western Mountains,WMT
+Tennessee,TN,Southern Appalachians,SAP
+Tennessee,TN,Coastal Plains,CPL
+Texas,TX,Southern Plains,SPL
+Texas,TX,Coastal Plains,CPL
+Texas,TX,Xeric,XER
+Utah,UT,Western Mountains,WMT
+Utah,UT,Xeric,XER
+Virginia,VA,Southern Appalachians,SAP
+Virginia,VA,Coastal Plains,CPL
+Vermont,VT,Northern Appalachians,NAP
+Washington,WA,Western Mountains,WMT
+Washington,WA,Xeric,XER
+Wisconsin,WI,Temperate Plains,TPL
+Wisconsin,WI,Upper Midwest,UMW
+West Virginia,WV,Southern Appalachians,SAP
+Wyoming,WY,Western Mountains,WMT
+Wyoming,WY,Xeric,XER
+Wyoming,WY,Northern Plains,NPL
+Wyoming,WY,Southern Plains,SPL
